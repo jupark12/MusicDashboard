@@ -1,0 +1,12 @@
+.Card {
+    position: absolute;
+    width: 150px;
+    height: 75px; // Adjust height for spike appearance
+    background-color: lightblue;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transform-origin: bottom center; // Spoke effect
+}
