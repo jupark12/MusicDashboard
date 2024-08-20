@@ -1,12 +1,20 @@
 .Card {
     position: absolute;
-    width: 150px;
-    height: 75px; // Adjust height for spike appearance
-    background-color: lightblue;
-    border: 1px solid #ccc;
+    width: 200px;
+    height: 100px; // Adjust height for spike appearance
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
-    transform-origin: bottom center; // Spoke effect
+    // transform-origin: bottom center; // Spoke effect
+}
+
+.Card-current {
+    //make the current card bigger
+    z-index: 1;
+}
+
+.Card-other {
+    // fade out the other cards
+    opacity: 0.5;
 }
