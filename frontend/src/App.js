@@ -10,10 +10,10 @@ import tellMeAudio from './assets/audio/TellMe.mp3';
 import coupAudio from './assets/audio/coup.mp3';
 
 function App() {
-
+  console.log("App.js")
   const cards = [
     {
-      title: "Sunny Days",
+      title: "Leave",
       cover: require('./assets/imgs/yellow.png'),
       date: "08/10/24",
       summary: "A cheerful tune that brings warmth and happiness on sunny days.",
@@ -28,56 +28,56 @@ function App() {
     },
     {
       title: "Rhythm of the Night",
-      cover: "https://via.placeholder.com/80/DC143C/FFFFFF?text=Rhythm+of+the+Night",
+      cover: require('./assets/imgs/graduation.png'),
       date: "10/10/24",
       summary: "An upbeat dance track that keeps you moving all night long.",
       audio: tellMeAudio
     },
     {
       title: "Lost in Melody",
-      cover: "https://via.placeholder.com/80/20B2AA/FFFFFF?text=Lost+in+Melody",
+      cover: require('./assets/imgs/jik.png'),
       date: "11/10/24",
       summary: "A dreamy song that takes you on a journey through sound.",
       audio: coupAudio
     },
     {
       title: "Dance With Me",
-      cover: "https://via.placeholder.com/80/FF69B4/000000?text=Dance+With+Me",
+      cover: require('./assets/imgs/mbdtf.png'),
       date: "12/10/24",
       summary: "A fun and catchy tune that invites everyone to hit the dance floor.",
       audio: leaveAudio
     },
     {
       title: "Chasing Stars",
-      cover: "https://via.placeholder.com/80/4682B4/FFFFFF?text=Chasing+Stars",
+      cover: require('./assets/imgs/yeezus.png'),
       date: "01/10/24",
       summary: "An inspiring anthem about following your dreams and aspirations.",
       audio: leaveAudio
     },
     {
       title: "Echoes of Yesterday",
-      cover: "https://via.placeholder.com/80/8B4513/FFFFFF?text=Echoes+of+Yesterday",
+      cover: require('./assets/imgs/college.png'),
       date: "02/10/24",
       summary: "A reflective song that captures the nostalgia of the past.",
       audio: leaveAudio
     },
     {
       title: "Electric Dreams",
-      cover: "https://via.placeholder.com/80/9400D3/FFFFFF?text=Electric+Dreams",
+      cover: require('./assets/imgs/late.png'),
       date: "03/10/24",
       summary: "A futuristic sound that blends electronic beats with smooth vocals.",
       audio: leaveAudio
     },
     {
       title: "Sweet Harmony",
-      cover: "https://via.placeholder.com/80/FF4500/FFFFFF?text=Sweet+Harmony",
+      cover: require('./assets/imgs/donda.png'),
       date: "04/10/24",
       summary: "A heartwarming ballad about love and connection.",
       audio: leaveAudio
     },
     {
       title: "Journey to the Unknown",
-      cover: "https://via.placeholder.com/80/00CED1/000000?text=Journey+to+the+Unknown",
+      cover: require('./assets/imgs/pablo.png'),
       date: "05/10/24",
       summary: "An adventurous song that takes you on a musical exploration.",
       audio: leaveAudio
@@ -91,8 +91,10 @@ function App() {
     <div className="App">
       <GlobalProvider>
         <Header />
-        <Summary cards={cards}/>
-        <Wheel cards={cards}/>
+        <div className='flex'>
+          <Wheel cards={cards}/>
+          <Summary cards={cards}/> 
+        </div>
       </GlobalProvider>
     </div>
   );

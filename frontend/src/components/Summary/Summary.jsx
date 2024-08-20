@@ -2,74 +2,80 @@ import React, { useContext, useRef, useEffect, useState } from "react";
 import "./Summary.scss";
 import { GlobalContext } from "../../util/GlobalState";
 import WaveSurfer from 'wavesurfer.js';
-import { FaPlay, FaPause } from "react-icons/fa";
+import { FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Summary = ({ cards }) => {
-  const { currentIndex } = useContext(GlobalContext);
+  
+  const { currentIndex, setCurrentIndex } = useContext(GlobalContext);
+  const { setTotalRotation } = useContext(GlobalContext);
   const currentIndexRef = useRef(currentIndex);
+  const currentRenderCount = useRef(0);
+  currentRenderCount.current += 1;
+  const waveformRef = useRef(null);
+  const wavesurferRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
-  const waveformRefs = useRef(cards.map(() => React.createRef()));
-  const wavesurferRefs = useRef(cards.map(() => null));
-  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    cards.forEach((card, index) => {
-      if (!card.audio) return;
+    if (wavesurferRef.current) {
+      wavesurferRef.current.destroy();
+    }
 
-      if (wavesurferRefs.current[index]) {
-        wavesurferRefs.current[index].destroy();
-      }
+    if (!cards[currentIndex].audio) return;
 
-      wavesurferRefs.current[index] = WaveSurfer.create({
-        container: waveformRefs.current[index].current,
-        waveColor: 'rgb(200, 0, 200)',
-        progressColor: 'rgb(100, 0, 100)',
-        cursorWidth: 0,
-        renderFunction: (channels, ctx) => {
-          const { width, height } = ctx.canvas;
-          const scale = channels[0].length / width;
-          const step = 5;
-          ctx.translate(0, height / 2);
-          ctx.strokeStyle = ctx.fillStyle;
-          ctx.beginPath();
-          for (let i = 0; i < width; i += step * 2) {
-            const index = Math.floor(i * scale);
-            const value = Math.abs(channels[0][index]);
-            let x = i;
-            let y = value * height;
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, y);
-            ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, true);
-            ctx.lineTo(x + step, 0);
-            x += step;
-            y = -y;
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, y);
-            ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, false);
-            ctx.lineTo(x + step, 0);
-          }
-          ctx.stroke();
-          ctx.closePath();
-        },
-      });
-
-      wavesurferRefs.current[index].load(card.audio);
+    wavesurferRef.current = WaveSurfer.create({
+      container: waveformRef.current,
+      waveColor: 'rgb(0, 0 , 0)',
+      progressColor: 'rgb(255, 255, 255)',
+      cursorWidth: 0,
+      renderFunction: (channels, ctx) => {
+        const { width, height } = ctx.canvas;
+        const scale = channels[0].length / width;
+        const step = 5;
+        ctx.translate(0, height / 2);
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.beginPath();
+        for (let i = 0; i < width; i += step * 2) {
+          const index = Math.floor(i * scale);
+          const value = Math.abs(channels[0][index]);
+          let x = i;
+          let y = value * height;
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, y);
+          ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, true);
+          ctx.lineTo(x + step, 0);
+          x += step;
+          y = -y;
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, y);
+          ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, false);
+          ctx.lineTo(x + step, 0);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      },
     });
 
+    wavesurferRef.current.load(cards[currentIndex].audio);
+    console.log(currentIndexRef.current, currentIndex, 'bruh', wavesurferRef.current)
+    if (currentRenderCount.current > 1) {
+      wavesurferRef.current.play();
+    }
+
     return () => {
-      wavesurferRefs.current.forEach(wavesurfer => {
-        if (wavesurfer) {
-          wavesurfer.destroy();
-        }
-      });
+      if (wavesurferRef.current) {
+        console.log('destroying')
+        wavesurferRef.current.destroy();
+      }
     };
-  }, [cards]);
+  }, [currentIndex]);
 
   const handlePlayPause = () => {
-    const currentWavesurfer = wavesurferRefs.current[currentIndex];
+    const currentWavesurfer = wavesurferRef.current;
+    console.log('this ting')
     if (currentWavesurfer.isPlaying()) {
       currentWavesurfer.pause();
       setIsPlaying(false);
@@ -79,44 +85,41 @@ const Summary = ({ cards }) => {
     }
   };
 
-  function handleKeyPress(event) {
-    const currentIndex = currentIndexRef.current;
-    if (event.key === "ArrowUp") {
-      const currentWavesurfer = wavesurferRefs.current[currentIndex];
-      const nextIndex = currentIndex === cards.length - 1 ? 0 : currentIndex + 1;
-      const nextWavesurfer = wavesurferRefs.current[nextIndex];
-      currentWavesurfer.pause();
-      currentWavesurfer.seekTo(0);
-      nextWavesurfer.play();
-    } else if (event.key === "ArrowDown") {
-      const currentWavesurfer = wavesurferRefs.current[currentIndex];
-      const prevIndex = currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
-      const prevWavesurfer = wavesurferRefs.current[prevIndex];
-      currentWavesurfer.pause();
-      currentWavesurfer.seekTo(0);
-      prevWavesurfer.play();
-    }
-  }
+  const handleNext = () => {
+    setCurrentIndex(currentIndex => currentIndex === cards.length - 1 ? 0 : currentIndex + 1);
+    setTotalRotation(prevRotation => prevRotation - (360 / cards.length));
+    const currentWavesurfer = wavesurferRef.current;
+    currentWavesurfer.seekTo(0);
+    setIsPlaying(true);
+  };
 
-  useEffect(() => {
-      window.addEventListener("keydown", handleKeyPress);
-      return () => {
-          window.removeEventListener("keydown", handleKeyPress);
-      };
-  }, []);
+  const handlePrevious = () => {
+    setCurrentIndex(currentIndex => currentIndex === 0 ? cards.length - 1 : currentIndex - 1);
+    setTotalRotation(prevRotation => prevRotation + (360 / cards.length));
+    const currentWavesurfer = wavesurferRef.current;
+    currentWavesurfer.seekTo(0);
+    setIsPlaying(true);
+  };
 
   return (
     <div className="Summary-container fixed top-[56px] w-half h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20">
-      {cards.map((card, index) => (
-        <div key={index} className={`Summary ${currentIndex === index ? 'visible' : 'hidden'}`}>
-          {card.date && <p>{card.date}</p>}
-          <div ref={waveformRefs.current[index]} className="min-w-[375px]" />
+      {cards[currentIndex].date && <p>{cards[currentIndex].date}</p>}
+      
+      <div className="fixed bottom-0 w-full flex justify-center pb-20 left-1 gap-3">
+        <div className="flex flex-col items-center">
+          <div ref={waveformRef} className="min-w-[375px]" />
+          <div className="flex gap-3">
+            <button onClick={handlePrevious} className="border-2 p-4 rounded-full border-black">
+              <FaChevronLeft size={24} />
+            </button>
+            <button onClick={handlePlayPause} className="border-2 p-4 rounded-full border-black">
+              {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+            </button>
+            <button onClick={handleNext} className="border-2 p-4 rounded-full border-black">
+              <FaChevronRight size={24} />
+            </button>
+          </div>
         </div>
-      ))}
-      <div className="fixed bottom-0 w-full flex justify-center pb-20 left-1">
-        <button onClick={handlePlayPause} className="border-2 p-4 rounded-full border-black">
-          {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-        </button>
       </div>
     </div>
   );
