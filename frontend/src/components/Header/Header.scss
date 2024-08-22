@@ -1,0 +1,47 @@
+.Icon {
+    &-plus {
+        &:hover {
+            // Make color a softer green
+            color: #4CAF50;
+            transform: scale(1.2);
+            transition: transform 1.0s ease;
+            transition: color 1.0s ease;
+        }
+
+        // slowly scale down on hover off
+        &:not(:hover) {
+            transition: transform 1.0s ease;
+            transition: color 1.0s ease;
+        }
+    }
+}
+
+.Button {
+    border: 1px dashed #888;
+    border-radius: 16px;
+
+    &-edit {
+        &:hover {
+            transform: scale(1.2);
+            transition: transform 1.0s ease;
+        }
+
+        &:not(:hover) {
+            transition: transform 1.0s ease;
+        }
+    }
+
+    &-editStop {
+        &:hover {
+            color: rgb(228, 99, 99);
+            transform: scale(1.2);
+            transition: transform 1.0s ease;
+            transition: color 1.0s ease;
+        }
+
+        &:not(:hover) {
+            transition: transform 1.0s ease;
+            transition: color 1.0s ease;
+        }
+    }
+}

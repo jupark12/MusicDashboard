@@ -1,20 +1,88 @@
 .Card {
     position: absolute;
-    width: 200px;
-    height: 100px; // Adjust height for spike appearance
+    width: 125px;
+    min-height: 80px; // Adjust height for spike appearance
+    padding: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
-    // transform-origin: bottom center; // Spoke effect
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+//pulse animation for the current card
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+    }
+    5% {
+        transform: scale(0.92);
+    }
+    10% {
+        transform: scale(1.05);
+    }
+    15% {
+        transform: scale(1.0);
+    }
+    25% {
+        transform: scale(1.08);
+    }
+    35% {
+        transform: scale(1.01);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    55% {
+        transform: scale(1.02);
+    }
+    65% {
+        transform: scale(1.0);
+    }
+    75% {
+        transform: scale(1.05);
+    }
+    85% {
+        transform: scale(1.02);
+    }
+    95% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(0.95);
+    }
 }
 
 .Card-current {
     //make the current card bigger
     z-index: 1;
+    background: rgba(255, 255, 250, 0.25);
+
+    .Card-pulse {
+        // Animation for the current card
+        animation: pulse 3.0s infinite;
+        // Animation 
+    }
 }
 
 .Card-other {
     // fade out the other cards
-    opacity: 0.5;
+    opacity: 0.3;
+}
+
+.Card-trashIcon {
+    filter: drop-shadow(5px 5px 5px #000);
+    
+    &:hover {
+        filter: drop-shadow(5px 5px 5px #ff0000); // Change shadow color on hover
+    }
+}
+
+.Card-editMode {
+    opacity: 1 !important; // Ensure the card is fully visible in edit mode
+    background-color: transparent; // Make background transparent in edit mode
+    border: 1px dashed #888; // Add a dashed border in edit mode
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.5); // Lighten background on hover
+    }
 }

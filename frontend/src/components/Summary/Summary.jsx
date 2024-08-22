@@ -3,29 +3,26 @@ import "./Summary.scss";
 import { GlobalContext } from "../../util/GlobalState";
 import WaveSurfer from 'wavesurfer.js';
 import { FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import UploadModal from "../Modal/UploadModal";
 
-const Summary = ({ cards }) => {
-  
+
+const Summary = () => {
+  console.log("Summary.js");
+  const { cards, setCards } = useContext(GlobalContext);
   const { currentIndex, setCurrentIndex } = useContext(GlobalContext);
   const { setTotalRotation } = useContext(GlobalContext);
   const currentIndexRef = useRef(currentIndex);
   const currentRenderCount = useRef(0);
   currentRenderCount.current += 1;
-  const waveformRef = useRef(null);
+  const waveformRef = useRef();
   const wavesurferRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { isPlaying, setIsPlaying } = useContext(GlobalContext);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
-  }, [currentIndex]);
+  }, [currentIndex, cards]);
 
-  useEffect(() => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.destroy();
-    }
-
-    if (!cards[currentIndex].audio) return;
-
+  const createWavesurfer = (tempCards, index) => {
     wavesurferRef.current = WaveSurfer.create({
       container: waveformRef.current,
       waveColor: 'rgb(0, 0 , 0)',
@@ -59,11 +56,18 @@ const Summary = ({ cards }) => {
       },
     });
 
-    wavesurferRef.current.load(cards[currentIndex].audio);
-    console.log(currentIndexRef.current, currentIndex, 'bruh', wavesurferRef.current)
+    wavesurferRef.current.load(tempCards[index].audio);
     if (currentRenderCount.current > 1) {
       wavesurferRef.current.play();
+      setIsPlaying(true);
     }
+  };
+
+  useEffect(() => {
+    if (!cards[currentIndex]?.audio || !waveformRef.current) return;
+
+    console.log('creating')
+    createWavesurfer(cards, currentIndex);
 
     return () => {
       if (wavesurferRef.current) {
@@ -71,11 +75,10 @@ const Summary = ({ cards }) => {
         wavesurferRef.current.destroy();
       }
     };
-  }, [currentIndex]);
+  }, [currentIndex, cards]);
 
   const handlePlayPause = () => {
     const currentWavesurfer = wavesurferRef.current;
-    console.log('this ting')
     if (currentWavesurfer.isPlaying()) {
       currentWavesurfer.pause();
       setIsPlaying(false);
@@ -88,23 +91,39 @@ const Summary = ({ cards }) => {
   const handleNext = () => {
     setCurrentIndex(currentIndex => currentIndex === cards.length - 1 ? 0 : currentIndex + 1);
     setTotalRotation(prevRotation => prevRotation - (360 / cards.length));
-    const currentWavesurfer = wavesurferRef.current;
-    currentWavesurfer.seekTo(0);
     setIsPlaying(true);
   };
 
   const handlePrevious = () => {
     setCurrentIndex(currentIndex => currentIndex === 0 ? cards.length - 1 : currentIndex - 1);
     setTotalRotation(prevRotation => prevRotation + (360 / cards.length));
-    const currentWavesurfer = wavesurferRef.current;
-    currentWavesurfer.seekTo(0);
     setIsPlaying(true);
   };
 
+  // On end of audio set isPlaying to false
+  useEffect(() => {
+    const currentWavesurfer = wavesurferRef.current;
+    if (currentWavesurfer) {
+      currentWavesurfer.on('finish', () => {
+        setIsPlaying(false);
+      });
+    }
+  }, [currentIndex, cards]);
+
   return (
     <div className="Summary-container fixed top-[56px] w-half h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20">
-      {cards[currentIndex].date && <p>{cards[currentIndex].date}</p>}
-      
+      {cards[currentIndex]?.date && <p>File Created: {cards[currentIndex].date}</p>}
+
+      <div className="tracklist pt-8">
+        {cards.map((card, index) => (
+          <div key={index} className={`track ${index === currentIndex ? 'active' : ''}`}>
+            {index+1}.{' '}{card.title}{' '}
+            {index === currentIndex && isPlaying && (
+              <div className="squiggle"></div> 
+            )}
+          </div>
+        ))}
+      </div>
       <div className="fixed bottom-0 w-full flex justify-center pb-20 left-1 gap-3">
         <div className="flex flex-col items-center">
           <div ref={waveformRef} className="min-w-[375px]" />
