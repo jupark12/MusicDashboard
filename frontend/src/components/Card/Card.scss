@@ -63,14 +63,6 @@
     opacity: 0.3;
 }
 
-.Card-trashIcon {
-    filter: drop-shadow(5px 5px 5px #000);
-    
-    &:hover {
-        filter: drop-shadow(5px 5px 5px #ff0000); // Change shadow color on hover
-    }
-}
-
 .Card-editMode {
     position: relative;
     opacity: 1 !important; // Ensure the card is fully visible in edit mode

@@ -25,5 +25,5 @@
     padding: 24px;
     overflow: auto;
     height: 550px;
-    transition: height 1s ease-in-out;
+    transition: height 1s ease-in-out, background-color 1s ease-in-out, border 1s ease-in-out, box-shadow 2s ease-in-out;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import UploadModal from "../Modal/UploadModal";
 import { GlobalContext } from "../../util/GlobalState"; 
-import { FaPlusCircle, FaEdit, FaTrash } from "react-icons/fa";
+import { FaPlusCircle, FaEdit, FaTrash, FaGripVertical } from "react-icons/fa";
 import "./Tracklist.scss";
 
 const Tracklist = () => {
@@ -20,17 +20,20 @@ const Tracklist = () => {
     });
   }
   
-  const handleDelete = (event) => {
-    if (cards.length === 0) return;
-    const selectedIndex = Number(event.currentTarget.dataset.index);
-    
-    const updatedCards = cards.filter((_, tempIndex) => tempIndex !== selectedIndex);
-    setCards(updatedCards)
-  } 
+  const handleDrag = (event) => {
+    console.log("Drag event", event.currentTarget.dataset);
+    const draggedIndex = Number(event.currentTarget.dataset.index);
+    const draggedCard = cards[draggedIndex];
+    const newCards = [...cards];
+    newCards.splice(draggedIndex, 1);
+    const dropIndex = currentIndex > draggedIndex ? currentIndex - 1 : currentIndex;
+    newCards.splice(dropIndex, 0, draggedCard);
+    setCards(newCards);
+  }
 
   return(
-    <div className="Tracklist">
-      <div className="tracklist pt-8">
+    <div className="Tracklist-container">
+      <div className="Tracklist pt-8">
         {cards.map((card, index) => (
           <div className="flex gap-4">
             <div key={index} className={`track w-full ${index === currentIndex ? 'active' : ''}`} data-index={index} onClick={handleTrackClick}>
@@ -41,11 +44,11 @@ const Tracklist = () => {
             </div>
             {editMode && (
               <button 
-                onClick={handleDelete} 
-                className="Card-trashIcon ml-auto text-white z-10 right-10"
+                onClick={handleDrag} 
+                className="Tracklist-dragIcon ml-auto text-white z-10 right-10"
                 data-index={index}
               >
-                <FaTrash size={24} className=""/>
+                <FaGripVertical size={24} className=""/>
               </button> 
             )}
           </div>

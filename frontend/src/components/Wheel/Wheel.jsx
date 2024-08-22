@@ -11,7 +11,7 @@ const Wheel = () => {
 
     return (
         <div className='Wheel-container z-[-1]' style={{ background: `linear-gradient(to bottom, ${gradientColors})` }}>
-            <div className={`Wheel absolute w-full h-full flex items-center justify-center z-10  ${editMode ? 'Wheel-editMode shadow-2xl' : 'top-[-30px] left-[48vw]'}`}
+            <div className={`Wheel absolute w-full h-full flex items-center justify-center z-10  ${editMode ? 'Wheel-editMode shadow-teal-300 shadow-2xl' : 'top-[-30px] left-[48vw]'}`}
                 style={editMode ? { display: 'flex' } : {
                     transform: `rotate(${totalRotation}deg)`,
                     transition: "transform 1.0s ease-out"
