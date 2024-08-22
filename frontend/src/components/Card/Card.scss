@@ -1,5 +1,4 @@
 .Card {
-    position: absolute;
     width: 125px;
     min-height: 80px; // Adjust height for spike appearance
     padding: 12px;
@@ -13,43 +12,37 @@
 //pulse animation for the current card
 @keyframes pulse {
     0% {
-        transform: scale(0.95);
-    }
-    5% {
-        transform: scale(0.92);
+        transform: scale(1.0);
     }
     10% {
-        transform: scale(1.05);
+        transform: scale(0.92);
     }
-    15% {
+    20% {
         transform: scale(1.0);
     }
-    25% {
-        transform: scale(1.08);
+    30% {
+        transform: scale(0.92);
     }
-    35% {
-        transform: scale(1.01);
+    40% {
+        transform: scale(1.0);
     }
     50% {
-        transform: scale(0.95);
+        transform: scale(0.92);
     }
-    55% {
-        transform: scale(1.02);
-    }
-    65% {
+    60% {
         transform: scale(1.0);
     }
-    75% {
-        transform: scale(1.05);
+    70% {
+        transform: scale(0.92);
     }
-    85% {
-        transform: scale(1.02);
+    80% {
+        transform: scale(1.0);
     }
-    95% {
-        transform: scale(1.03);
+    90% {
+        transform: scale(0.92);
     }
     100% {
-        transform: scale(0.95);
+        transform: scale(1.0);
     }
 }
 
@@ -60,7 +53,7 @@
 
     .Card-pulse {
         // Animation for the current card
-        animation: pulse 3.0s infinite;
+        animation: pulse 8.0s infinite;
         // Animation 
     }
 }
@@ -79,10 +72,14 @@
 }
 
 .Card-editMode {
+    position: relative;
     opacity: 1 !important; // Ensure the card is fully visible in edit mode
     background-color: transparent; // Make background transparent in edit mode
     border: 1px dashed #888; // Add a dashed border in edit mode
     &:hover {
         background-color: rgba(255, 255, 255, 0.5); // Lighten background on hover
     }
+    width: 150px;
+    height: 150px;
+    transition: border 2s ease, height 1s ease; // Smooth transition for border, width, and height
 }

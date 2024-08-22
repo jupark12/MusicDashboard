@@ -8,12 +8,15 @@ const Header = () => {
   console.log("Header.js");
   
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const { editMode, setEditMode } = useContext(GlobalContext);
+  const { editMode, setEditMode, setIsDelete } = useContext(GlobalContext);
 
   const openModal = () => setIsUpdateModalOpen(true);
   const closeModal = () => setIsUpdateModalOpen(false);
 
-  const handleEditMode = () => setEditMode(prev => !prev);
+  const handleEditMode = () => {
+    setEditMode(prev => !prev);
+    setIsDelete(prev => !prev);
+  };;
 
   return(
     <div className="Header bg-transparent flex py-4 fixed w-full">

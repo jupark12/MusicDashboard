@@ -1,7 +1,8 @@
 .Icon {
     &-plus {
         &:hover {
-            color: #696b5d;
+            // Make color a softer green
+            color: #4CAF50;
             transform: scale(1.2);
             // HOW TO TRANsition for both color and transform?
             transition: transform 1.0s ease, color 1.0s ease;

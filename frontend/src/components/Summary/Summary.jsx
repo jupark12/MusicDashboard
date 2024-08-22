@@ -2,21 +2,24 @@ import React, { useContext, useRef, useEffect, useState } from "react";
 import "./Summary.scss";
 import { GlobalContext } from "../../util/GlobalState";
 import WaveSurfer from 'wavesurfer.js';
-import { FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import UploadModal from "../Modal/UploadModal";
-
+import { FaPlay, FaPause, FaChevronLeft, FaChevronRight, FaTrash } from "react-icons/fa";
+import Tracklist from "../Tracklist/Tracklist";
+import { throttle } from 'lodash';
 
 const Summary = () => {
   console.log("Summary.js");
   const { cards, setCards } = useContext(GlobalContext);
   const { currentIndex, setCurrentIndex } = useContext(GlobalContext);
   const { setTotalRotation } = useContext(GlobalContext);
+  const { isDelete, setIsDelete } = useContext(GlobalContext);
+  const { editMode } = useContext(GlobalContext);
   const currentIndexRef = useRef(currentIndex);
   const currentRenderCount = useRef(0);
   currentRenderCount.current += 1;
   const waveformRef = useRef();
   const wavesurferRef = useRef(null);
   const { isPlaying, setIsPlaying } = useContext(GlobalContext);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
@@ -42,13 +45,13 @@ const Summary = () => {
           let y = value * height;
           ctx.moveTo(x, 0);
           ctx.lineTo(x, y);
-          ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, true);
+          ctx.arc(x + step / 10, y, step / 10, Math.PI, 0, true);
           ctx.lineTo(x + step, 0);
           x += step;
           y = -y;
           ctx.moveTo(x, 0);
           ctx.lineTo(x, y);
-          ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, false);
+          ctx.arc(x + step / 10, y, step / 10, Math.PI, 0, false);
           ctx.lineTo(x + step, 0);
         }
         ctx.stroke();
@@ -57,9 +60,11 @@ const Summary = () => {
     });
 
     wavesurferRef.current.load(tempCards[index].audio);
-    if (currentRenderCount.current > 1) {
+    if (currentRenderCount.current > 1 && !isDelete) {
       wavesurferRef.current.play();
       setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
     }
   };
 
@@ -105,26 +110,26 @@ const Summary = () => {
     const currentWavesurfer = wavesurferRef.current;
     if (currentWavesurfer) {
       currentWavesurfer.on('finish', () => {
-        setIsPlaying(false);
+        handleNext();
       });
+      currentWavesurfer.on('audioprocess', throttle(() => {
+        setCurrentTime(currentWavesurfer.getCurrentTime());
+      }, 1000));
     }
   }, [currentIndex, cards]);
 
+  const formatTime = time => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
   return (
     <div className="Summary-container fixed top-[56px] w-half h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20">
+      <div>Timestamp: {formatTime(currentTime)}</div>
       {cards[currentIndex]?.date && <p>File Created: {cards[currentIndex].date}</p>}
-
-      <div className="tracklist pt-8">
-        {cards.map((card, index) => (
-          <div key={index} className={`track ${index === currentIndex ? 'active' : ''}`}>
-            {index+1}.{' '}{card.title}{' '}
-            {index === currentIndex && isPlaying && (
-              <div className="squiggle"></div> 
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="fixed bottom-0 w-full flex justify-center pb-20 left-1 gap-3">
+      <Tracklist />
+      <div className="fixed bottom-0 left-[-40px] right-[40px] pb-20 gap-3 w-full">
         <div className="flex flex-col items-center">
           <div ref={waveformRef} className="min-w-[375px]" />
           <div className="flex gap-3">

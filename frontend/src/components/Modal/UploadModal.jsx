@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import Moment from 'react-moment';
 import { GlobalContext } from "../../util/GlobalState";
 import { useDropzone } from "react-dropzone";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaMusic, FaCamera } from "react-icons/fa";
 import "./UploadModal.scss";
 
 const UploadModal = ({ closeModal }) => {
@@ -91,13 +91,14 @@ const UploadModal = ({ closeModal }) => {
     }
   };
 
-  const goToPreviousSlide = () => {
+  const goToPreviousSlide = (event) => {
+    event.preventDefault();
     setCurrentSlide((slide) => slide - 1 >= 0 ? slide - 1 : 1);
   };
 
   return (
     <div className="UploadModal">
-      <div className="UploadModal-content rounded-md">
+      <div className="UploadModal-content rounded-md text-[#696b5d]">
         <span className="close" onClick={closeModal}>
           &times;
         </span>
@@ -105,13 +106,13 @@ const UploadModal = ({ closeModal }) => {
           <div className="flex flex-col items-center h-full">
             <h2 className="pb-8">Add New Song</h2>
             <form className="flex flex-col items-center w-full h-full">
-              {droppedAudioFile ? (
-                <p>Audio file selected: {droppedAudioFile}</p>
-              ) : (
-                <div {...getRootProps({ className: "dropzone cursor-pointer h-32 w-32 p-2 flex items-center" })} 
-                >
-                  <input {...getInputProps()} />
-                </div>
+              <div {...getRootProps({ className: "dropzone cursor-pointer h-32 w-32 p-2 flex items-center" })} 
+              >
+                <input {...getInputProps()} />
+                <FaMusic size={32} className="flex justify-center w-full"/>
+              </div>
+              {droppedAudioFile && (
+                <p className="mt-8 text-center">Audio file selected: {droppedAudioFile}</p>
               )}
               <div className="ml-auto mt-auto">
                 <button className="mt-auto" onClick={goToNextSlide}><FaChevronRight size={16} /></button>
@@ -128,10 +129,11 @@ const UploadModal = ({ closeModal }) => {
                 <div {...getRootProps({ className: "dropzone cursor-pointer rounded-full h-32 w-32 p-2 flex items-center" })} 
                 >
                   <input {...getInputProps()} />
+                  <FaCamera size={32} className="flex justify-center w-full"/>
                 </div>
               )}
               <input
-                className="my-4 border-b-2 border-gray-300 p-2 rounded-sm"
+                className="mt-8 border-b-2 border-gray-300 p-2 rounded-sm"
                 type="text"
                 name="title"
                 value={formData.title}

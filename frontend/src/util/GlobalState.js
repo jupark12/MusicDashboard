@@ -13,6 +13,7 @@ export const GlobalProvider = ({ children }) => {
   const [totalRotation, setTotalRotation] = useState(270);
   const [ editMode, setEditMode ] = useState(false);
   const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ isDelete, setIsDelete ] = useState(false);
 
   const initialCards = [
     {
@@ -89,7 +90,13 @@ export const GlobalProvider = ({ children }) => {
   const [cards, setCards] = useState(initialCards);
 
   return (
-    <GlobalContext.Provider value={{ currentIndex, setCurrentIndex, cards, setCards, totalRotation, setTotalRotation, editMode, setEditMode, isPlaying, setIsPlaying }}>
+    <GlobalContext.Provider 
+    value={{ currentIndex, setCurrentIndex, 
+              cards, setCards, 
+              totalRotation, setTotalRotation, 
+              editMode, setEditMode, 
+              isPlaying, setIsPlaying,
+              isDelete, setIsDelete }}>
       {children}
     </GlobalContext.Provider>
   );

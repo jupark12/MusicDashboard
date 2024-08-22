@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.20",
     "color-thief-react": "^2.1.0",
+    "lodash": "^4.17.21",
     "node-sass": "^7.0.3",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
