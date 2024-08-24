@@ -1,3 +1,3 @@
-import Message from "./Message.jsx";
+import Summary from "./Summary.jsx";
 
-export default Message;
+export default Summary;

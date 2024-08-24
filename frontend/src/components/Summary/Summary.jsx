@@ -13,20 +13,31 @@ import Tracklist from "../Tracklist/Tracklist";
 import { throttle } from "lodash";
 
 const Summary = () => {
-  const { cards, setCards } = useContext(GlobalContext);
-  const { currentIndex, setCurrentIndex } = useContext(GlobalContext);
-  const { setTotalRotation } = useContext(GlobalContext);
-  const { isDelete, setIsDelete } = useContext(GlobalContext);
-  const { isShuffle, setIsShuffle } = useContext(GlobalContext);
-  const currentIndexRef = useRef(currentIndex);
+  const {
+    cards,
+    setCards,
+    currentIndex,
+    setCurrentIndex,
+    setTotalRotation,
+    isDelete,
+    setIsDelete,
+    isShuffle,
+    setIsShuffle,
+    isPlaying,
+    setIsPlaying,
+    isRecording,
+    isSameAudio,
+    setIsSameAudio,
+  } = useContext(GlobalContext);
   const currentRenderCount = useRef(0);
+  const isSameAudioRef = useRef(isSameAudio);
   currentRenderCount.current += 1;
   const waveformRef = useRef();
   const wavesurferRef = useRef(null);
-  const { isPlaying, setIsPlaying } = useContext(GlobalContext);
   const [currentTime, setCurrentTime] = useState(0);
+
   useEffect(() => {
-    currentIndexRef.current = currentIndex;
+    isSameAudioRef.current = isSameAudio;
   }, [currentIndex, cards]);
 
   const createWavesurfer = (tempCards, index) => {
@@ -65,6 +76,7 @@ const Summary = () => {
     });
 
     wavesurferRef.current.load(tempCards[index].audio);
+
     if (currentRenderCount.current > 1 && !isDelete) {
       wavesurferRef.current.play();
       setIsPlaying(true);
@@ -74,17 +86,14 @@ const Summary = () => {
   };
 
   useEffect(() => {
-    if (!cards[currentIndex]?.audio || !waveformRef.current) return;
-
+    if (wavesurferRef.current && !isSameAudioRef.current) {
+      console.log("destroying");
+      wavesurferRef.current.destroy();
+    }
+    if (!cards[currentIndex]?.audio || !waveformRef.current || isSameAudio)
+      return;
     console.log("creating");
     createWavesurfer(cards, currentIndex);
-
-    return () => {
-      if (wavesurferRef.current) {
-        console.log("destroying");
-        wavesurferRef.current.destroy();
-      }
-    };
   }, [currentIndex, cards]);
 
   const handlePlayPause = () => {
@@ -102,7 +111,7 @@ const Summary = () => {
     if (isShuffle) {
       setCurrentIndex((currentIndex) => {
         const randomIndex = Math.floor(Math.random() * cards.length);
-
+        setIsSameAudio(cards[randomIndex].id == cards[currentIndex].id);
         setTotalRotation((prevRotation) => {
           const newRotation =
             randomIndex >= currentIndex
@@ -117,9 +126,12 @@ const Summary = () => {
         return randomIndex;
       });
     } else {
-      setCurrentIndex((currentIndex) =>
-        currentIndex === cards.length - 1 ? 0 : currentIndex + 1
-      );
+      setCurrentIndex((currentIndex) => {
+        const newIndex =
+          currentIndex === cards.length - 1 ? 0 : currentIndex + 1;
+        setIsSameAudio(cards[newIndex].id == cards[currentIndex].id);
+        return newIndex;
+      });
       setTotalRotation((prevRotation) => prevRotation - 360 / cards.length);
       setIsPlaying(true);
     }
@@ -129,7 +141,7 @@ const Summary = () => {
     if (isShuffle) {
       setCurrentIndex((currentIndex) => {
         const randomIndex = Math.floor(Math.random() * cards.length);
-
+        setIsSameAudio(cards[randomIndex].id == cards[currentIndex].id);
         setTotalRotation((prevRotation) => {
           const newRotation =
             randomIndex >= currentIndex
@@ -144,9 +156,12 @@ const Summary = () => {
         return randomIndex;
       });
     } else {
-      setCurrentIndex((currentIndex) =>
-        currentIndex === 0 ? cards.length - 1 : currentIndex - 1
-      );
+      setCurrentIndex((currentIndex) => {
+        const newIndex =
+          currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
+        setIsSameAudio(cards[newIndex].id == cards[currentIndex].id);
+        return newIndex;
+      });
       setTotalRotation((prevRotation) => prevRotation + 360 / cards.length);
       setIsPlaying(true);
     }
@@ -168,6 +183,14 @@ const Summary = () => {
     }
   }, [currentIndex, cards]);
 
+  // Stop the audio when recording
+  useEffect(() => {
+    if (isRecording) {
+      wavesurferRef.current.stop();
+      setIsPlaying(false);
+    }
+  }, [isRecording]);
+
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -179,8 +202,10 @@ const Summary = () => {
   };
 
   return (
-    <div className="Summary-container fixed top-[56px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20">
-      <div className="text-white">Timestamp: {formatTime(currentTime)}</div>
+    <div className="Summary-container fixed top-[56px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20 w-[30%]">
+      <div className="flex gap-2">
+        Timestamp: <p className="text-white">{formatTime(currentTime)}</p>
+      </div>
       {cards[currentIndex]?.date && (
         <p className="text-white">File Created: {cards[currentIndex].date}</p>
       )}

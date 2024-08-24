@@ -7,11 +7,10 @@
   align-items: center;
   border-radius: 12px;
   font-size: 14px;
-  cursor: pointer;
 
   &:hover {
     background-color: rgba(255, 255, 250, 0.25);
-    transition: background-color 1.5s ease; // Smooth transition
+    transition: background-color 0.5s ease; // Smooth transition
   }
 }
 
@@ -56,17 +55,38 @@
   //make the current card bigger
   z-index: 1;
   background: rgba(255, 255, 250, 0.25);
+  transform: scale(1.1);
 
   .Card-pulse {
     // Animation for the current card
     animation: pulse 8s infinite;
-    // Animation
   }
 }
 
 .Card-other {
   // fade out the other cards
   opacity: 0.3;
+}
+
+.Card-cover {
+  img {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  &:not(:hover) {
+    transition: transform 0.5s ease-in-out;
+  }
 }
 
 .Card-trashIcon {
@@ -83,7 +103,7 @@
   background-color: white; // Make background transparent in edit mode
   border: 1px dashed #888; // Add a dashed border in edit mode
   &:hover {
-    background-color: rgba(255, 255, 255, 0.5); // Lighten background on hover
+    background-color: rgba(255, 255, 255, 0.1); // Lighten background on hover
   }
   width: 150px;
   height: 150px;

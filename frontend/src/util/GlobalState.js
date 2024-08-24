@@ -16,15 +16,18 @@ import pettyAudio from "../assets/audio/petty.mp3";
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+  const [isSameAudio, setIsSameAudio] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalRotation, setTotalRotation] = useState(270);
   const [editMode, setEditMode] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const initialCards = [
     {
+      id: 1,
       title: "Leave",
       cover: require("../assets/imgs/yellow.png"),
       date: "08/10/24",
@@ -33,6 +36,7 @@ export const GlobalProvider = ({ children }) => {
       audio: leaveAudio,
     },
     {
+      id: 2,
       title: "LifeStyle",
       cover: require("../assets/imgs/vultures.png"),
       date: "09/10/24",
@@ -41,6 +45,7 @@ export const GlobalProvider = ({ children }) => {
       audio: lifeStyleAudio,
     },
     {
+      id: 3,
       title: "Tell Me",
       cover: require("../assets/imgs/graduation.png"),
       date: "10/10/24",
@@ -48,6 +53,7 @@ export const GlobalProvider = ({ children }) => {
       audio: tellMeAudio,
     },
     {
+      id: 4,
       title: "Coop",
       cover: require("../assets/imgs/jik.png"),
       date: "11/10/24",
@@ -55,6 +61,7 @@ export const GlobalProvider = ({ children }) => {
       audio: coupAudio,
     },
     {
+      id: 5,
       title: "Promotion",
       cover: require("../assets/imgs/mbdtf.png"),
       date: "12/10/24",
@@ -63,6 +70,7 @@ export const GlobalProvider = ({ children }) => {
       audio: promotionAudio,
     },
     {
+      id: 6,
       title: "River",
       cover: require("../assets/imgs/yeezus.png"),
       date: "01/10/24",
@@ -71,6 +79,7 @@ export const GlobalProvider = ({ children }) => {
       audio: riverAudio,
     },
     {
+      id: 7,
       title: "Peanut Butter",
       cover: require("../assets/imgs/college.png"),
       date: "02/10/24",
@@ -78,6 +87,7 @@ export const GlobalProvider = ({ children }) => {
       audio: peanutAudio,
     },
     {
+      id: 8,
       title: "Good Vibes",
       cover: require("../assets/imgs/late.png"),
       date: "03/10/24",
@@ -86,6 +96,7 @@ export const GlobalProvider = ({ children }) => {
       audio: vibeAudio,
     },
     {
+      id: 9,
       title: "Pray For Me",
       cover: require("../assets/imgs/donda.png"),
       date: "04/10/24",
@@ -93,6 +104,7 @@ export const GlobalProvider = ({ children }) => {
       audio: prayAudio,
     },
     {
+      id: 10,
       title: "Petty Love",
       cover: require("../assets/imgs/pablo.png"),
       date: "05/10/24",
@@ -100,11 +112,14 @@ export const GlobalProvider = ({ children }) => {
       audio: pettyAudio,
     },
   ];
+
   const [cards, setCards] = useState(initialCards);
 
   return (
     <GlobalContext.Provider
       value={{
+        isSameAudio,
+        setIsSameAudio,
         currentIndex,
         setCurrentIndex,
         cards,
@@ -119,6 +134,8 @@ export const GlobalProvider = ({ children }) => {
         setIsDelete,
         isShuffle,
         setIsShuffle,
+        isRecording,
+        setIsRecording,
       }}
     >
       {children}

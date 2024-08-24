@@ -1,0 +1,19 @@
+.Recorder {
+  position: fixed;
+  width: 370px;
+  height: 370px;
+  z-index: 10;
+  top: 64px;
+  left: calc(50vw - 200px);
+}
+
+.Recorder-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto auto;
+  margin-bottom: 0;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 370px;
+  height: 370px;
+}

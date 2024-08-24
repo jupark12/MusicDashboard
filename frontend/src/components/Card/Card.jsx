@@ -13,6 +13,7 @@ const Card = ({ transform, cover, title, index, translate }) => {
     setTotalRotation,
     setCurrentIndex,
     setIsDelete,
+    setIsSameAudio,
   } = useContext(GlobalContext);
   const { data: bgColor } = usePalette(cover, 3, "hex"); // Get the palette of the current card cover
   const { isPlaying, setIsPlaying } = useContext(GlobalContext);
@@ -25,8 +26,10 @@ const Card = ({ transform, cover, title, index, translate }) => {
   };
 
   const handleCardClick = () => {
+    console.log("clicked card");
     setIsDelete(false);
     setCurrentIndex(index);
+    setIsSameAudio(false);
     setTotalRotation((prevRotation) => {
       const newRotation =
         index >= currentIndex
@@ -51,7 +54,6 @@ const Card = ({ transform, cover, title, index, translate }) => {
               transition: "transform 0.5s ease",
             }
       }
-      onClick={handleCardClick}
     >
       {editMode && (
         <button
@@ -62,7 +64,10 @@ const Card = ({ transform, cover, title, index, translate }) => {
           <FaTrash size={24} className="" />
         </button>
       )}
-      <div className={`Card-cover ${isPlaying ? "Card-pulse" : ""}`}>
+      <div
+        className={`Card-cover ${isPlaying ? "Card-pulse" : ""}`}
+        onClick={handleCardClick}
+      >
         <img src={cover} alt={title} className="h-20 w-20 p-1 rounded-full" />
       </div>
 
