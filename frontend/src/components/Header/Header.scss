@@ -1,44 +1,51 @@
 .Icon {
-    &-plus {
-        &:hover {
-            color: #696b5d;
-            transform: scale(1.2);
-            // HOW TO TRANsition for both color and transform?
-            transition: transform 1.0s ease, color 1.0s ease;
-        }
-
-        // slowly scale down on hover off
-        &:not(:hover) {
-            transition: transform 1.0s ease, color 3.0s ease;
-        }
+  &-plus {
+    &:hover {
+      color: #5eead4;
+      transition: color 1s ease;
     }
+
+    &:not(:hover) {
+      transition: color 1s ease;
+    }
+
+    &:active,
+    &:focus {
+      color: #5eead4;
+    }
+  }
+
+  &-faded {
+    color: #696969;
+    transition: color 1s ease;
+  }
 }
 
 .Button {
-    border: 1px dashed #888;
-    border-radius: 16px;
+  border: 1px dashed #888;
+  border-radius: 16px;
 
-    &-edit {
-        &:hover {
-            transform: scale(1.2);
-            transition: transform 1.0s ease;
-        }
-
-        &:not(:hover) {
-            transition: transform 1.0s ease;
-        }
+  &-edit {
+    &:hover {
+      transform: scale(1.2);
+      transition: transform 1s ease;
     }
 
-    &-editStop {
-        color: rgb(228, 99, 99);
-
-        &:hover {
-            transform: scale(1.2);
-            transition: transform 1.0s ease;
-        }
-
-        &:not(:hover) {
-            transition: transform 1.0s ease;
-        }
+    &:not(:hover) {
+      transition: transform 1s ease;
     }
+  }
+
+  &-editStop {
+    color: #5eead4;
+
+    &:hover {
+      transform: scale(1.2);
+      transition: transform 1s ease;
+    }
+
+    &:not(:hover) {
+      transition: transform 1s ease;
+    }
+  }
 }

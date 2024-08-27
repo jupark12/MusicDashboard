@@ -38,6 +38,7 @@ const UploadModal = ({ closeModal }) => {
         ...prevData,
         audio: URL.createObjectURL(audioFile),
         date: <Moment>{audioFile.lastModified}</Moment>,
+        id: cards.length + 1,
       }));
       setDroppedAudioFile(audioFile.name);
       setErrorMessage(""); // Clear error message on successful drop

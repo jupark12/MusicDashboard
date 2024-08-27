@@ -1,96 +1,85 @@
-.Icon {
-    &-plus {
-        &:hover {
-            // Make color a softer green
-            color: #4CAF50;
-            transform: scale(1.2);
-            // HOW TO TRANsition for both color and transform?
-            transition: transform 1.0s ease, color 1.0s ease;
-        }
-
-        // slowly scale down on hover off
-        &:not(:hover) {
-            transition: transform 1.0s ease, color 3.0s ease;
-        }
-    }
-}
-
 .Button {
-    border: 1px dashed #888;
-    border-radius: 16px;
+  border: 1px dashed #888;
+  border-radius: 16px;
 
-    &-edit {
-        &:hover {
-            transform: scale(1.2);
-            transition: transform 1.0s ease;
-        }
-
-        &:not(:hover) {
-            transition: transform 1.0s ease;
-        }
+  &-edit {
+    &:hover {
+      transform: scale(1.2);
+      transition: transform 1s ease;
     }
 
-    &-editStop {
-        color: #5eead4;
-
-        &:hover {
-            transform: scale(1.2);
-            transition: transform 1.0s ease;
-        }
-
-        &:not(:hover) {
-            transition: transform 1.0s ease;
-        }
+    &:not(:hover) {
+      transition: transform 1s ease;
     }
+  }
+
+  &-editStop {
+    color: #5eead4;
+
+    &:hover {
+      transform: scale(1.2);
+      transition: transform 1s ease;
+    }
+
+    &:not(:hover) {
+      transition: transform 1s ease;
+    }
+  }
 }
 
 .Tracklist {
-    .active {
-      color: white;
-    }
-  
-    .track {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding: 8px;
-      padding-left: 0;
-      border-bottom: 1px solid #ccc;
-  
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-      }
-    }
+  &-container {
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+  }
 
-    &-dragIcon {
-        filter: drop-shadow(5px 5px 5px #000);
-        
-        &:hover {
-            filter: drop-shadow(5px 5px 5px #5eead4); // Change shadow color on hover
-        }
+  .active {
+    color: white;
+  }
+
+  .track {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px;
+    padding-left: 0;
+    border-bottom: 1px solid #ccc;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
     }
   }
-  
-  @keyframes squiggleAnimation {
-    0%, 100% {
-        transform: scaleY(1);
+
+  &-dragIcon {
+    filter: drop-shadow(5px 5px 5px #000);
+
+    &:hover {
+      filter: drop-shadow(5px 5px 5px #5eead4); // Change shadow color on hover
     }
-    50% {
-        transform: scaleY(2);
-    }
   }
-  
-  .squiggle {
-    position: relative;
-    display: inline-block;
-    width: 10px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: black;
-    animation: squiggleAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes squiggleAnimation {
+  0%,
+  100% {
+    transform: scaleY(1);
   }
-  
-  .squiggle:not(:last-child) {
-    margin-right: 4px;
+  50% {
+    transform: scaleY(2);
   }
+}
+
+.squiggle {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: black;
+  animation: squiggleAnimation 1.5s ease-in-out infinite;
+}
+
+.squiggle:not(:last-child) {
+  margin-right: 4px;
+}

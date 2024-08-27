@@ -28,6 +28,13 @@ const Summary = () => {
     isRecording,
     isSameAudio,
     setIsSameAudio,
+    editMode,
+    ballColor,
+    setBallColor,
+    gradientColors1,
+    gradientColors2,
+    setGradientColors1,
+    setGradientColors2,
   } = useContext(GlobalContext);
   const currentRenderCount = useRef(0);
   const isSameAudioRef = useRef(isSameAudio);
@@ -77,7 +84,7 @@ const Summary = () => {
 
     wavesurferRef.current.load(tempCards[index].audio);
 
-    if (currentRenderCount.current > 1 && !isDelete) {
+    if (currentRenderCount.current > 1 && !editMode) {
       wavesurferRef.current.play();
       setIsPlaying(true);
     } else {
@@ -86,6 +93,7 @@ const Summary = () => {
   };
 
   useEffect(() => {
+    console.log(wavesurferRef.current, currentIndex, isSameAudioRef.current); // Debugging
     if (wavesurferRef.current && !isSameAudioRef.current) {
       console.log("destroying");
       wavesurferRef.current.destroy();
@@ -197,27 +205,75 @@ const Summary = () => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const handleShuffle = () => {
-    setIsShuffle((prev) => !prev);
-  };
-
   return (
     <div className="Summary-container fixed top-[56px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20 w-[30%]">
-      <div className="flex gap-2">
-        Timestamp: <p className="text-white">{formatTime(currentTime)}</p>
-      </div>
-      {cards[currentIndex]?.date && (
-        <p className="text-white">File Created: {cards[currentIndex].date}</p>
-      )}
-      {cards?.length > 0 && (
-        <button
-          className={`Button-shuffle ${isShuffle ? "Button-shuffle-on" : ""}`}
-          onClick={handleShuffle}
-        >
-          <FaRandom size={18} className="mt-2" />
-        </button>
-      )}
       <Tracklist />
+
+      <div
+        className={`mt-8
+          ${
+            editMode
+              ? "Summary-colorPicker  shadow-teal-300 shadow-2xl"
+              : "Summary-info"
+          }`}
+      >
+        {editMode ? (
+          <div className="">
+            <div className="flex gap-4">
+              <p className="flex flex-col">
+                Ball Color:{" "}
+                <span className="text-black">{ballColor.toUpperCase()}</span>
+              </p>
+              <input
+                type="color"
+                value={ballColor}
+                onChange={(e) => setBallColor(e.target.value)}
+                className="cursor-pointer"
+              />
+            </div>
+            <div className="flex gap-4">
+              <p className="flex flex-col">
+                Background Colors:{" "}
+                <div className="flex gap-4">
+                  <span className="text-black">
+                    {gradientColors1.toUpperCase()}
+                  </span>
+                  <span className="text-black">
+                    {gradientColors2.toUpperCase()}
+                  </span>
+                </div>
+              </p>
+              <input
+                type="color"
+                value={gradientColors1}
+                onChange={(e) => setGradientColors1(e.target.value)}
+                className="cursor-pointer"
+              />
+              <input
+                type="color"
+                value={gradientColors2}
+                onChange={(e) => setGradientColors2(e.target.value)}
+                className="cursor-pointer"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="">
+            <div className="flex gap-2">
+              Timestamp: <p className="text-white">{formatTime(currentTime)}</p>
+            </div>
+            {cards[currentIndex]?.date && (
+              <p className="text-white">
+                File Created: {cards[currentIndex].date}
+              </p>
+            )}
+            <p className="text-white">
+              Notes: {cards[currentIndex]?.notes || "No notes available."}
+            </p>
+          </div>
+        )}
+      </div>
+
       <div className="fixed bottom-0 left-[180px] pb-5 w-[50vw] justify-end flex">
         <div className="flex flex-col items-center">
           <div ref={waveformRef} className="min-w-[375px]" />

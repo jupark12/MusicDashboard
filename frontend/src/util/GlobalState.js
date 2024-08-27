@@ -9,6 +9,7 @@ import peanutAudio from "../assets/audio/peanut.mp3";
 import vibeAudio from "../assets/audio/vibe.mp3";
 import prayAudio from "../assets/audio/pray.mp3";
 import pettyAudio from "../assets/audio/petty.mp3";
+import { set } from "lodash";
 
 // GlobalState.js
 
@@ -24,6 +25,9 @@ export const GlobalProvider = ({ children }) => {
   const [isDelete, setIsDelete] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [ballColor, setBallColor] = useState("#000000");
+  const [gradientColors1, setGradientColors1] = useState("#373832");
+  const [gradientColors2, setGradientColors2] = useState("#bca483");
 
   const initialCards = [
     {
@@ -31,8 +35,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Leave",
       cover: require("../assets/imgs/yellow.png"),
       date: "08/10/24",
-      summary:
-        "A cheerful tune that brings warmth and happiness on sunny days.",
+      notes: "A cheerful tune that brings warmth and happiness on sunny days.",
       audio: leaveAudio,
     },
     {
@@ -40,8 +43,7 @@ export const GlobalProvider = ({ children }) => {
       title: "LifeStyle",
       cover: require("../assets/imgs/vultures.png"),
       date: "09/10/24",
-      summary:
-        "A soothing melody perfect for a romantic night under the stars.",
+      notes: "A soothing melody perfect for a romantic night under the stars.",
       audio: lifeStyleAudio,
     },
     {
@@ -49,7 +51,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Tell Me",
       cover: require("../assets/imgs/graduation.png"),
       date: "10/10/24",
-      summary: "An upbeat dance track that keeps you moving all night long.",
+      notes: "An upbeat dance track that keeps you moving all night long.",
       audio: tellMeAudio,
     },
     {
@@ -57,7 +59,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Coop",
       cover: require("../assets/imgs/jik.png"),
       date: "11/10/24",
-      summary: "A dreamy song that takes you on a journey through sound.",
+      notes: "A dreamy song that takes you on a journey through sound.",
       audio: coupAudio,
     },
     {
@@ -65,7 +67,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Promotion",
       cover: require("../assets/imgs/mbdtf.png"),
       date: "12/10/24",
-      summary:
+      notes:
         "A fun and catchy tune that invites everyone to hit the dance floor.",
       audio: promotionAudio,
     },
@@ -74,8 +76,7 @@ export const GlobalProvider = ({ children }) => {
       title: "River",
       cover: require("../assets/imgs/yeezus.png"),
       date: "01/10/24",
-      summary:
-        "An inspiring anthem about following your dreams and aspirations.",
+      notes: "An inspiring anthem about following your dreams and aspirations.",
       audio: riverAudio,
     },
     {
@@ -83,7 +84,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Peanut Butter",
       cover: require("../assets/imgs/college.png"),
       date: "02/10/24",
-      summary: "A reflective song that captures the nostalgia of the past.",
+      notes: "A reflective song that captures the nostalgia of the past.",
       audio: peanutAudio,
     },
     {
@@ -91,7 +92,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Good Vibes",
       cover: require("../assets/imgs/late.png"),
       date: "03/10/24",
-      summary:
+      notes:
         "A futuristic sound that blends electronic beats with smooth vocals.",
       audio: vibeAudio,
     },
@@ -100,7 +101,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Pray For Me",
       cover: require("../assets/imgs/donda.png"),
       date: "04/10/24",
-      summary: "A heartwarming ballad about love and connection.",
+      notes: "A heartwarming ballad about love and connection.",
       audio: prayAudio,
     },
     {
@@ -108,7 +109,7 @@ export const GlobalProvider = ({ children }) => {
       title: "Petty Love",
       cover: require("../assets/imgs/pablo.png"),
       date: "05/10/24",
-      summary: "An adventurous song that takes you on a musical exploration.",
+      notes: "An adventurous song that takes you on a musical exploration.",
       audio: pettyAudio,
     },
   ];
@@ -136,6 +137,12 @@ export const GlobalProvider = ({ children }) => {
         setIsShuffle,
         isRecording,
         setIsRecording,
+        ballColor,
+        setBallColor,
+        gradientColors1,
+        setGradientColors1,
+        gradientColors2,
+        setGradientColors2,
       }}
     >
       {children}

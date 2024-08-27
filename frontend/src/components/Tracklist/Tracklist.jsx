@@ -1,17 +1,15 @@
-import React, { useState, useContext, useEffect } from "react";
-import UploadModal from "../Modal/UploadModal";
+import React, { useContext } from "react";
 import { GlobalContext } from "../../util/GlobalState";
-import { FaPlusCircle, FaEdit, FaTrash, FaGripVertical } from "react-icons/fa";
+import { FaGripVertical } from "react-icons/fa";
 import { DndContext, closestCenter } from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import "./Tracklist.scss";
-import { set } from "lodash";
 
 const Tracklist = () => {
   const {
     editMode,
-    setEditMode,
     cards,
     setCards,
     currentIndex,
@@ -24,6 +22,7 @@ const Tracklist = () => {
   const handleTrackClick = (event) => {
     const selectedIndex = Number(event.currentTarget.dataset.index);
     setCurrentIndex(selectedIndex);
+    setIsSameAudio(false);
     setTotalRotation((prevRotation) => {
       const newRotation =
         selectedIndex >= currentIndex
@@ -44,26 +43,29 @@ const Tracklist = () => {
         const updatedCards = arrayMove(cards, oldIndex, newIndex);
         setCurrentIndex((prevIndex) => {
           setIsSameAudio(updatedCards[newIndex].id == cards[prevIndex].id);
+          setTotalRotation((prevRotation) => {
+            const newRotation =
+              newIndex >= prevIndex
+                ? prevRotation - (360 / cards.length) * (newIndex - prevIndex)
+                : prevRotation + (360 / cards.length) * (prevIndex - newIndex);
+            return newRotation;
+          });
           return newIndex;
         });
         return updatedCards;
-      });
-
-      setTotalRotation((prevRotation) => {
-        const newRotation =
-          newIndex >= oldIndex
-            ? prevRotation - (360 / cards.length) * (newIndex - oldIndex)
-            : prevRotation + (360 / cards.length) * (oldIndex - newIndex);
-        return newRotation;
       });
     }
   };
 
   return (
-    <div className="Tracklist-container w-full">
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <div className="Tracklist-container w-full overflow-y-auto h-[40%] mt-8 max-h-[410px] md:h-auto">
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
         <SortableContext items={cards.map((card) => card.id)}>
-          <div className="Tracklist pt-8">
+          <div className="Tracklist">
             {cards.map((card, index) => (
               <SortableTrack
                 key={card.id}
