@@ -1,32 +1,3 @@
-.Button {
-  border: 1px dashed #888;
-  border-radius: 16px;
-
-  &-edit {
-    &:hover {
-      transform: scale(1.2);
-      transition: transform 1s ease;
-    }
-
-    &:not(:hover) {
-      transition: transform 1s ease;
-    }
-  }
-
-  &-editStop {
-    color: #5eead4;
-
-    &:hover {
-      transform: scale(1.2);
-      transition: transform 1s ease;
-    }
-
-    &:not(:hover) {
-      transition: transform 1s ease;
-    }
-  }
-}
-
 .Tracklist {
   &-container {
     scrollbar-width: thin;

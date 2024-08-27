@@ -43,36 +43,46 @@ const Header = () => {
         )}
       </span>
 
-      <div className="flex ml-auto w-min">
-        <button
-          onClick={isUpdateModalOpen ? closeModal : openModal}
-          className={`text-white mr-10 ${
-            isRecorderModalOpen ? "Icon-faded" : "Icon-plus"
-          }`}
-        >
-          <FaPlusCircle size={32} />
-        </button>
+      {cards.length < 40 && (
+        <div className="flex ml-auto w-min">
+          <button
+            onClick={isUpdateModalOpen ? closeModal : openModal}
+            className={`text-white mr-10 ${
+              isRecorderModalOpen ? "Icon-faded" : "Icon-plus"
+            }`}
+          >
+            <FaPlusCircle size={32} />
+          </button>
 
-        <button
-          onClick={isRecorderModalOpen ? closeRecorderModel : openRecorderModel}
-          className={`text-white mr-10 ${
-            isUpdateModalOpen ? "Icon-faded" : "Icon-plus"
-          }`}
-        >
-          <FaMicrophone size={32} />
-        </button>
-      </div>
-
+          {/* TODO: Add Recorder once backend is done */}
+          {/* <button
+            onClick={
+              isRecorderModalOpen ? closeRecorderModel : openRecorderModel
+            }
+            className={`text-white mr-10 ${
+              isUpdateModalOpen ? "Icon-faded" : "Icon-plus"
+            }`}
+          >
+            <FaMicrophone size={32} />
+          </button> */}
+        </div>
+      )}
       {isUpdateModalOpen && <UploadModal closeModal={closeModal} />}
       {isRecorderModalOpen && <Recorder closeModal={closeRecorderModel} />}
-      <div className="w-[167px] ml-auto flex justify-end">
+
+      <div className="w-[167px] ml-auto flex justify-end items-center gap-8">
+        <div className="text-white">
+          <span className={cards.length < 40 ? "" : "text-red-500"}>
+            {cards?.length ?? 0}/40
+          </span>
+        </div>
         <button
           onClick={handleEditMode}
           className={`Button ${
             editMode ? "Button-editStop" : "Button-edit"
-          } px-8  py-2 text-white`}
+          } px-6  py-2 text-white`}
         >
-          {editMode ? "Stop Edit" : "Edit"}
+          {editMode ? "Done" : "Edit"}
         </button>
       </div>
     </div>
