@@ -28,12 +28,14 @@ const UploadModal = ({ closeModal }) => {
   const { totalRotation, setTotalRotation } = useContext(GlobalContext);
 
   const onDrop = (acceptedFiles) => {
+    console.log(acceptedFiles);
     if (acceptedFiles.length === 0) return;
     console.log(acceptedFiles);
 
     const audioFile = acceptedFiles.find((file) => file.type.includes("audio"));
 
     if (audioFile) {
+      console.log(audioFile);
       setFormData((prevData) => ({
         ...prevData,
         audio: URL.createObjectURL(audioFile),

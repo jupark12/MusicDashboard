@@ -42,15 +42,25 @@ const Tracklist = () => {
       setCards((cards) => {
         const updatedCards = arrayMove(cards, oldIndex, newIndex);
         setCurrentIndex((prevIndex) => {
-          setIsSameAudio(updatedCards[newIndex].id == cards[prevIndex].id);
+          setIsSameAudio(true);
+          let tempIndex = prevIndex;
+
+          if (oldIndex > prevIndex && newIndex <= prevIndex) {
+            tempIndex = prevIndex + 1;
+          } else if (oldIndex < prevIndex && newIndex >= prevIndex) {
+            tempIndex = prevIndex - 1;
+          }
           setTotalRotation((prevRotation) => {
             const newRotation =
-              newIndex >= prevIndex
-                ? prevRotation - (360 / cards.length) * (newIndex - prevIndex)
-                : prevRotation + (360 / cards.length) * (prevIndex - newIndex);
-            return newRotation;
+              newIndex >= tempIndex
+                ? prevRotation - (360 / cards.length) * (newIndex - tempIndex)
+                : prevRotation + (360 / cards.length) * (tempIndex - newIndex);
+            const newRotation2 = 270 - (360 / updatedCards.length) * tempIndex;
+
+            return oldIndex === prevIndex ? newRotation : newRotation2;
           });
-          return newIndex;
+
+          return oldIndex === prevIndex ? newIndex : tempIndex; // Update the current index if the active card was moved
         });
         return updatedCards;
       });

@@ -29,6 +29,7 @@ const Card = ({ transform, translate, card, index }) => {
 
     setCurrentIndex((prevIndex) => {
       const newCurrentIndex = prevIndex > index ? prevIndex - 1 : prevIndex;
+      setIsSameAudio(prevIndex === index ? false : true);
       setTotalRotation(() => {
         const newRotation = 270 - (360 / updatedCards.length) * newCurrentIndex;
         return newRotation;
@@ -137,7 +138,7 @@ const Card = ({ transform, translate, card, index }) => {
             />
             <button
               type="submit"
-              className={`ml-2 absolute right-2 ${
+              className={`ml-2 absolute right-4 ${
                 showSubmitButton
                   ? "opacity-100 transition-opacity duration-1000 ease-in-out"
                   : "opacity-0"
