@@ -10,7 +10,8 @@ import {
   FaRandom,
 } from "react-icons/fa";
 import Tracklist from "../Tracklist/Tracklist";
-import { throttle } from "lodash";
+import { first, throttle } from "lodash";
+import Moment from "react-moment";
 
 const Summary = () => {
   const {
@@ -35,17 +36,18 @@ const Summary = () => {
     gradientColors2,
     setGradientColors1,
     setGradientColors2,
+    firstInput,
+    setFirstInput,
   } = useContext(GlobalContext);
-  const currentRenderCount = useRef(0);
   const isSameAudioRef = useRef(isSameAudio);
-  currentRenderCount.current += 1;
   const waveformRef = useRef();
   const wavesurferRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     isSameAudioRef.current = isSameAudio;
-  }, [currentIndex, cards]);
+    console.log("firstInput", firstInput);
+  }, [currentIndex, cards, firstInput]);
 
   const createWavesurfer = (tempCards, index) => {
     wavesurferRef.current = WaveSurfer.create({
@@ -83,8 +85,7 @@ const Summary = () => {
     });
 
     wavesurferRef.current.load(tempCards[index].audio);
-
-    if (currentRenderCount.current > 1 && !editMode) {
+    if (firstInput && !editMode) {
       wavesurferRef.current.play();
       setIsPlaying(true);
     } else {
@@ -98,13 +99,14 @@ const Summary = () => {
       console.log("destroying");
       wavesurferRef.current.destroy();
     }
-    if (!cards[currentIndex]?.audio || !waveformRef.current || isSameAudio)
+    if (!cards?.[currentIndex]?.audio || !waveformRef.current || isSameAudio)
       return;
     console.log("creating");
     createWavesurfer(cards, currentIndex);
   }, [currentIndex, cards]);
 
   const handlePlayPause = () => {
+    setFirstInput(true);
     const currentWavesurfer = wavesurferRef.current;
     if (currentWavesurfer.isPlaying()) {
       currentWavesurfer.pause();
@@ -116,6 +118,7 @@ const Summary = () => {
   };
 
   const handleNext = () => {
+    setFirstInput(true);
     if (isShuffle) {
       setCurrentIndex((currentIndex) => {
         const randomIndex = Math.floor(Math.random() * cards.length);
@@ -146,6 +149,7 @@ const Summary = () => {
   };
 
   const handlePrevious = () => {
+    setFirstInput(true);
     if (isShuffle) {
       setCurrentIndex((currentIndex) => {
         const randomIndex = Math.floor(Math.random() * cards.length);
@@ -207,8 +211,7 @@ const Summary = () => {
 
   return (
     <div className="Summary-container fixed top-[56px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20 w-[30%]">
-      <Tracklist />
-
+      {cards?.length > 0 && <Tracklist />}
       <div
         className={`mt-8
           ${
@@ -262,13 +265,13 @@ const Summary = () => {
             <div className="flex gap-2">
               Timestamp: <p className="text-white">{formatTime(currentTime)}</p>
             </div>
-            {cards[currentIndex]?.date && (
+            {cards?.[currentIndex]?.date && (
               <p className="text-white">
-                File Created: {cards[currentIndex].date}
+                File Created: <Moment>{cards[currentIndex].date}</Moment>
               </p>
             )}
             <p className="text-white">
-              Notes: {cards[currentIndex]?.notes || "No notes available."}
+              Notes: {cards?.[currentIndex]?.notes || "No notes available."}
             </p>
           </div>
         )}

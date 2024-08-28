@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import leaveAudio from "../assets/audio/Leave.mp3";
 import lifeStyleAudio from "../assets/audio/LIFESTYLE.mp3";
 import tellMeAudio from "../assets/audio/TellMe.mp3";
@@ -9,7 +9,7 @@ import peanutAudio from "../assets/audio/peanut.mp3";
 import vibeAudio from "../assets/audio/vibe.mp3";
 import prayAudio from "../assets/audio/pray.mp3";
 import pettyAudio from "../assets/audio/petty.mp3";
-import { set } from "lodash";
+import axios from "axios";
 
 // GlobalState.js
 
@@ -28,6 +28,7 @@ export const GlobalProvider = ({ children }) => {
   const [ballColor, setBallColor] = useState("#000000");
   const [gradientColors1, setGradientColors1] = useState("#373832");
   const [gradientColors2, setGradientColors2] = useState("#bca483");
+  const [firstInput, setFirstInput] = useState(false);
 
   const initialCards = [
     {
@@ -114,7 +115,20 @@ export const GlobalProvider = ({ children }) => {
     },
   ];
 
-  const [cards, setCards] = useState(initialCards);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/albums");
+        setCards(response.data);
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
+    };
+
+    fetchCards();
+  }, []);
 
   return (
     <GlobalContext.Provider
@@ -143,6 +157,8 @@ export const GlobalProvider = ({ children }) => {
         setGradientColors1,
         gradientColors2,
         setGradientColors2,
+        firstInput,
+        setFirstInput,
       }}
     >
       {children}

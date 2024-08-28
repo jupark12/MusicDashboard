@@ -16,6 +16,7 @@ const Card = ({ transform, translate, card, index }) => {
     setCurrentIndex,
     setIsDelete,
     setIsSameAudio,
+    setFirstInput,
   } = useContext(GlobalContext);
   const { data: bgColor } = usePalette(cover, 3, "hex"); // Get the palette of the current card cover
   const { isPlaying, setIsPlaying } = useContext(GlobalContext);
@@ -40,6 +41,7 @@ const Card = ({ transform, translate, card, index }) => {
 
   const handleCardClick = () => {
     console.log("clicked card");
+    setFirstInput(true);
     setIsDelete(false);
     setCurrentIndex(index);
     setIsSameAudio(false);

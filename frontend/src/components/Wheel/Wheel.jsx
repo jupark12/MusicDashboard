@@ -30,32 +30,35 @@ const Wheel = () => {
       className={`Wheel-container z-[-1]`}
       style={{ background: `linear-gradient(to bottom, ${gradientColors})` }}
     >
-      <div
-        className={`Wheel absolute w-full h-full flex z-10 ${
-          editMode
-            ? "Wheel-editMode shadow-teal-300 shadow-2xl items-start, justify-start"
-            : "top-[-30px] items-center justify-center"
-        }`}
-        style={
-          editMode
-            ? { display: "flex" }
-            : {
-                transform: `rotate(${totalRotation}deg)`,
-                transition: "transform 1.0s ease-out",
-                left: `${40 + cards.length * 1.2}vw`,
-              }
-        }
-      >
-        {cards.map((card, index) => (
-          <Card
-            key={card.id}
-            transform={(360 / cards.length) * index}
-            translate={-300 - 20 * cards.length}
-            card={card}
-            index={index}
-          />
-        ))}
-      </div>
+      {cards?.length > 0 && (
+        <div
+          className={`Wheel absolute w-full h-full flex z-10 ${
+            editMode
+              ? "Wheel-editMode shadow-teal-300 shadow-2xl items-start, justify-start"
+              : "top-[-30px] items-center justify-center"
+          }`}
+          style={
+            editMode
+              ? { display: "flex" }
+              : {
+                  transform: `rotate(${totalRotation}deg)`,
+                  transition: "transform 1.0s ease-out",
+                  left: `${40 + cards.length * 1.2}vw`,
+                }
+          }
+        >
+          {cards.map((card, index) => (
+            <Card
+              key={card.id}
+              transform={(360 / cards.length) * index}
+              translate={-300 - 20 * cards.length}
+              card={card}
+              index={index}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="absolute top-[300px]" style={{ color: ballColor }}>
         <div className="ball text-[200px]">.</div>
         <div className="ball text-[100px]">.</div>

@@ -43,7 +43,7 @@ const Header = () => {
         )}
       </span>
 
-      {cards.length < 40 && (
+      {(cards?.length < 40 || !cards) && (
         <div className="flex ml-auto w-min">
           <button
             onClick={isUpdateModalOpen ? closeModal : openModal}
@@ -72,7 +72,7 @@ const Header = () => {
 
       <div className="w-[167px] ml-auto flex justify-end items-center gap-8">
         <div className="text-white">
-          <span className={cards.length < 40 ? "" : "text-red-500"}>
+          <span className={cards?.length < 40 ? "" : "text-red-500"}>
             {cards?.length ?? 0}/40
           </span>
         </div>

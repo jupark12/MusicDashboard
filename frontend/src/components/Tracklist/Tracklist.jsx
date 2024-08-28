@@ -17,9 +17,11 @@ const Tracklist = () => {
     setTotalRotation,
     isPlaying,
     setIsSameAudio,
+    setFirstInput,
   } = useContext(GlobalContext);
 
   const handleTrackClick = (event) => {
+    setFirstInput(true);
     const selectedIndex = Number(event.currentTarget.dataset.index);
     setCurrentIndex(selectedIndex);
     setIsSameAudio(false);

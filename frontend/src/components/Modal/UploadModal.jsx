@@ -10,15 +10,19 @@ import {
   FaCamera,
 } from "react-icons/fa";
 import "./UploadModal.scss";
+import axios from "axios";
+import ObjectID from "bson-objectid";
 
 const UploadModal = ({ closeModal }) => {
   Moment.globalFormat = "MM/DD/YY";
 
   const { cards, setCards } = useContext(GlobalContext);
   const [formData, setFormData] = useState({
+    id: "",
     cover: "",
     title: "",
     audio: "",
+    date: "",
   });
   const [droppedAudioFile, setDroppedAudioFile] = useState(""); // Updated state variable name
   const [droppedImageFile, setDroppedImageFile] = useState("");
@@ -39,10 +43,10 @@ const UploadModal = ({ closeModal }) => {
       setFormData((prevData) => ({
         ...prevData,
         audio: URL.createObjectURL(audioFile),
-        date: <Moment>{audioFile.lastModified}</Moment>,
-        id: cards.length + 1,
+        date: audioFile.lastModified,
+        id: ObjectID().toHexString(),
       }));
-      setDroppedAudioFile(audioFile.name);
+      setDroppedAudioFile(audioFile);
       setErrorMessage(""); // Clear error message on successful drop
     }
 
@@ -53,21 +57,28 @@ const UploadModal = ({ closeModal }) => {
         ...prevData,
         cover: URL.createObjectURL(imageFile),
       }));
-      setDroppedImageFile(imageFile.name);
+      setDroppedImageFile(imageFile);
     }
   };
 
   const addCard = (newCard) => {
-    setCards((cards) => {
-      const updatedCards = [...cards, newCard];
-      setCurrentIndex(updatedCards.length - 1); // Update the current index to the new card
-      setTotalRotation((prevRotation) => {
-        console.log(prevRotation, updatedCards.length, currentIndex);
-        const newRotation = 270 + 360 / updatedCards.length;
-        return newRotation;
+    if (cards?.length === 0 || !cards) {
+      setTotalRotation(270);
+      setCards([newCard]);
+      setCurrentIndex(0);
+    } else {
+      setCards((cards) => {
+        const updatedCards = [...cards, newCard];
+        setCurrentIndex(updatedCards.length - 1); // Update the current index to the new card
+        setTotalRotation((prevRotation) => {
+          console.log(prevRotation, updatedCards.length, currentIndex);
+          const newRotation = 270 + 360 / updatedCards.length;
+          return newRotation;
+        });
+        return updatedCards;
       });
-      return updatedCards;
-    });
+    }
+
     // Set the current index to the new card
     closeModal();
   };
@@ -85,9 +96,42 @@ const UploadModal = ({ closeModal }) => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    addCard(formData);
+    console.log(droppedAudioFile, droppedImageFile, formData);
+
+    const tempFormData = new FormData();
+    if (droppedAudioFile) {
+      tempFormData.append("audio", droppedAudioFile);
+    }
+    if (droppedImageFile) {
+      tempFormData.append("cover", droppedImageFile);
+    }
+    tempFormData.append("title", formData.title || "");
+    tempFormData.append("date", formData.date || null);
+    tempFormData.append("id", formData.id || "");
+
+    // Log the FormData entries
+    console.log("FormData entries:");
+    for (let [key, value] of tempFormData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/albums/upload",
+        tempFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("File uploaded successfully:", response.data.url);
+      addCard(formData);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
   const goToNextSlide = (event) => {
@@ -126,7 +170,7 @@ const UploadModal = ({ closeModal }) => {
               </div>
               {droppedAudioFile && (
                 <p className="mt-8 text-center">
-                  Audio file selected: {droppedAudioFile}
+                  Audio file selected: {droppedAudioFile.name}
                 </p>
               )}
               <div className="ml-auto mt-auto">
