@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import Moment from "react-moment";
 import { GlobalContext } from "../../util/GlobalState";
 import { useDropzone } from "react-dropzone";
 import Recorder from "../Recorder/Recorder";
@@ -12,11 +11,17 @@ import {
 import "./UploadModal.scss";
 import axios from "axios";
 import ObjectID from "bson-objectid";
+import { set } from "lodash";
 
 const UploadModal = ({ closeModal }) => {
-  Moment.globalFormat = "MM/DD/YY";
-
-  const { cards, setCards } = useContext(GlobalContext);
+  const {
+    cards,
+    setCards,
+    currentIndex,
+    setCurrentIndex,
+    setTotalRotation,
+    user,
+  } = useContext(GlobalContext);
   const [formData, setFormData] = useState({
     id: "",
     cover: "",
@@ -28,8 +33,7 @@ const UploadModal = ({ closeModal }) => {
   const [droppedImageFile, setDroppedImageFile] = useState("");
   const [currentSlide, setCurrentSlide] = useState(1); // Track the current slide
   const [errorMessage, setErrorMessage] = useState("");
-  const { currentIndex, setCurrentIndex } = useContext(GlobalContext);
-  const { totalRotation, setTotalRotation } = useContext(GlobalContext);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const onDrop = (acceptedFiles) => {
     console.log(acceptedFiles);
@@ -98,6 +102,7 @@ const UploadModal = ({ closeModal }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setUploadLoading(true);
     console.log(droppedAudioFile, droppedImageFile, formData);
 
     const tempFormData = new FormData();
@@ -110,6 +115,7 @@ const UploadModal = ({ closeModal }) => {
     tempFormData.append("title", formData.title || "");
     tempFormData.append("date", formData.date || null);
     tempFormData.append("id", formData.id || "");
+    tempFormData.append("userId", user.uid || "");
 
     // Log the FormData entries
     console.log("FormData entries:");
@@ -124,10 +130,12 @@ const UploadModal = ({ closeModal }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            UserID: user.uid,
           },
         }
       );
       console.log("File uploaded successfully:", response.data.url);
+      setUploadLoading(false);
       addCard(formData);
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -148,6 +156,16 @@ const UploadModal = ({ closeModal }) => {
     event.preventDefault();
     setCurrentSlide((slide) => (slide - 1 >= 0 ? slide - 1 : 1));
   };
+
+  if (!uploadLoading) {
+    return (
+      <div className="UploadModal">
+        <div className="flex items-center justify-center">
+          <div className="loader"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="UploadModal">

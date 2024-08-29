@@ -4,13 +4,13 @@
   height: 370px;
   z-index: 10;
   top: 80px;
-  left: calc(50% - 200px);
+  left: calc(50% - 185px);
 
   &:before {
     content: "";
     position: absolute;
-    top: -18px;
-    left: calc(50% - 14px);
+    top: -14px;
+    left: calc(50% - 10px);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid #fefefe;

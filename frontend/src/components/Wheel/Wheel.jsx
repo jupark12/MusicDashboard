@@ -2,19 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { GlobalContext } from "../../util/GlobalState";
 import Card from "../Card";
 import "./Wheel.scss";
-
-function hexToRgba(hex) {
-  // Remove the hash symbol if it exists
-  hex = hex.replace(/^#/, "");
-
-  // Parse the r, g, b values
-  let bigint = parseInt(hex, 16);
-  let r = (bigint >> 16) & 255;
-  let g = (bigint >> 8) & 255;
-  let b = bigint & 255;
-
-  return `rgba(${r}, ${g}, ${b}, 0.95)`;
-}
+import { hexToRgba } from "../../util/functions";
 
 const Wheel = () => {
   console.log("Wheel.js");
@@ -30,6 +18,15 @@ const Wheel = () => {
       className={`Wheel-container z-[-1]`}
       style={{ background: `linear-gradient(to bottom, ${gradientColors})` }}
     >
+      {cards?.length == 0 ||
+        (!cards && (
+          <div className="absolute right-0 left-0 flex flex-col items-center justify-center h-full">
+            <h1 className="text-white text-4xl">Welcome to Music Wheel</h1>
+            <p className="text-white">
+              Please upload your first song to begin.
+            </p>
+          </div>
+        ))}
       {cards?.length > 0 && (
         <div
           className={`Wheel absolute w-full h-full flex z-10 ${

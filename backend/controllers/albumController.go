@@ -53,6 +53,8 @@ func CreateAlbum(c *gin.Context) {
         }
     }
 
+    album.UserID = c.Request.Header.Get("UserID")
+
     // Assign the rest of the data to the album struct
     album = models.Album{
         Title: title,
@@ -60,6 +62,7 @@ func CreateAlbum(c *gin.Context) {
         Audio: audioURL,
         Cover: coverURL,
         ID:    primitive.NewObjectID(), // Assuming you're using MongoDB
+        UserID: album.UserID,
     }
 
     fmt.Println("Saving Album to database")
@@ -87,22 +90,14 @@ func GetAlbum(c *gin.Context) {
 }
 
 func ListAlbums(c *gin.Context) {
-
-	// Find all albums
-	cursor, err := database.DB.Find(context.Background(), bson.M{})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer cursor.Close(context.Background())
-
-	var albums []models.Album
-	if err := cursor.All(context.Background(), &albums); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, albums)
+    fmt.Println("Listing albums with user ID")
+    userID := c.Query("userId")
+    albums, err := models.GetAlbumsByUserID(userID)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    c.JSON(http.StatusOK, albums)
 }
 
 

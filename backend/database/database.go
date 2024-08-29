@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -12,6 +13,8 @@ import (
 var DB *mongo.Collection
 
 func ConnectDB() {
+    fmt.Println("Connecting to database")
+    
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
@@ -27,4 +30,8 @@ func ConnectDB() {
     }
 
     DB = client.Database("musicdashdb").Collection("albums")
+}
+
+func GetCollection(collectionName string) *mongo.Collection {
+    return DB.Database().Collection(collectionName)
 }

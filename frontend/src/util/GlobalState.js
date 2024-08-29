@@ -10,6 +10,8 @@ import vibeAudio from "../assets/audio/vibe.mp3";
 import prayAudio from "../assets/audio/pray.mp3";
 import pettyAudio from "../assets/audio/petty.mp3";
 import axios from "axios";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 // GlobalState.js
 
@@ -29,6 +31,27 @@ export const GlobalProvider = ({ children }) => {
   const [gradientColors1, setGradientColors1] = useState("#373832");
   const [gradientColors2, setGradientColors2] = useState("#bca483");
   const [firstInput, setFirstInput] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+      console.log(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out");
+      })
+      .catch((error) => {
+        console.error("Sign out error", error);
+      });
+  };
 
   const initialCards = [
     {
@@ -119,16 +142,21 @@ export const GlobalProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchCards = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/albums");
-        setCards(response.data);
-      } catch (error) {
-        console.error("Error fetching cards:", error);
+      if (user) {
+        try {
+          const response = await axios.get("http://localhost:8080/albums", {
+            params: {
+              userId: user.uid,
+            },
+          });
+          setCards(response.data);
+        } catch (error) {
+          console.error("Error fetching cards:", error);
+        }
       }
     };
-
     fetchCards();
-  }, []);
+  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -159,6 +187,11 @@ export const GlobalProvider = ({ children }) => {
         setGradientColors2,
         firstInput,
         setFirstInput,
+        user,
+        setUser,
+        loading,
+        setLoading,
+        logout,
       }}
     >
       {children}

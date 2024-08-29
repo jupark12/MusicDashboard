@@ -13,6 +13,8 @@ import Tracklist from "../Tracklist/Tracklist";
 import { first, throttle } from "lodash";
 import Moment from "react-moment";
 
+Moment.globalFormat = "MM/DD/YY";
+
 const Summary = () => {
   const {
     cards,
@@ -208,74 +210,68 @@ const Summary = () => {
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
-
   return (
-    <div className="Summary-container fixed top-[56px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20 w-[30%]">
+    <div className="Summary-container fixed top-[88px] h-full flex flex-col overflow-hidden items-start pl-[40px] pb-20 w-[30%]">
       {cards?.length > 0 && <Tracklist />}
-      <div
-        className={`mt-8
+      {cards?.length > 0 && (
+        <div
+          className={`
           ${
             editMode
               ? "Summary-colorPicker  shadow-teal-300 shadow-2xl"
               : "Summary-info"
           }`}
-      >
-        {editMode ? (
-          <div className="">
-            <div className="flex gap-4">
-              <p className="flex flex-col">
-                Ball Color:{" "}
-                <span className="text-black">{ballColor.toUpperCase()}</span>
-              </p>
-              <input
-                type="color"
-                value={ballColor}
-                onChange={(e) => setBallColor(e.target.value)}
-                className="cursor-pointer"
-              />
+        >
+          {editMode ? (
+            <div className="">
+              <div className="flex gap-4">
+                <p className="flex flex-col">
+                  Ball Color:{" "}
+                  <span className="text-black">{ballColor.toUpperCase()}</span>
+                </p>
+                <input
+                  type="color"
+                  value={ballColor}
+                  onChange={(e) => setBallColor(e.target.value)}
+                  className="cursor-pointer"
+                />
+              </div>
+              <div className="flex gap-4">
+                <p className="flex flex-col">
+                  Background Colors:{" "}
+                  <div className="flex gap-4">
+                    <span className="text-black">
+                      {gradientColors1.toUpperCase()}
+                    </span>
+                    <span className="text-black">
+                      {gradientColors2.toUpperCase()}
+                    </span>
+                  </div>
+                </p>
+                <input
+                  type="color"
+                  value={gradientColors1}
+                  onChange={(e) => setGradientColors1(e.target.value)}
+                  className="cursor-pointer"
+                />
+                <input
+                  type="color"
+                  value={gradientColors2}
+                  onChange={(e) => setGradientColors2(e.target.value)}
+                  className="cursor-pointer"
+                />
+              </div>
             </div>
-            <div className="flex gap-4">
-              <p className="flex flex-col">
-                Background Colors:{" "}
-                <div className="flex gap-4">
-                  <span className="text-black">
-                    {gradientColors1.toUpperCase()}
-                  </span>
-                  <span className="text-black">
-                    {gradientColors2.toUpperCase()}
-                  </span>
-                </div>
-              </p>
-              <input
-                type="color"
-                value={gradientColors1}
-                onChange={(e) => setGradientColors1(e.target.value)}
-                className="cursor-pointer"
-              />
-              <input
-                type="color"
-                value={gradientColors2}
-                onChange={(e) => setGradientColors2(e.target.value)}
-                className="cursor-pointer"
-              />
+          ) : (
+            <div className="">
+              <div className="flex gap-2">
+                Timestamp:{" "}
+                <p className="text-white">{formatTime(currentTime)}</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="">
-            <div className="flex gap-2">
-              Timestamp: <p className="text-white">{formatTime(currentTime)}</p>
-            </div>
-            {cards?.[currentIndex]?.date && (
-              <p className="text-white">
-                File Created: <Moment>{cards[currentIndex].date}</Moment>
-              </p>
-            )}
-            <p className="text-white">
-              Notes: {cards?.[currentIndex]?.notes || "No notes available."}
-            </p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <div className="fixed bottom-0 left-[180px] pb-5 w-[50vw] justify-end flex">
         <div className="flex flex-col items-center">

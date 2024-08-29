@@ -70,7 +70,7 @@ const Tracklist = () => {
   };
 
   return (
-    <div className="Tracklist-container w-full overflow-y-auto h-[40%] mt-8 max-h-[410px] md:h-auto">
+    <div className="Tracklist-container mb-8 w-full overflow-y-auto h-[40%] mt-8 max-h-[410px] md:h-auto">
       <DndContext
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
