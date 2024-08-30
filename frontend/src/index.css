@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&display=swap");
 
 body {
   @apply font-madimi;
@@ -11,6 +11,18 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.Button-auth {
+  @apply border-gray-300 border-2 rounded-md w-[320px] h-[52px];
+}
+
+.Button-cta {
+  @apply border-gray-300 border-2 rounded-md w-[320px] h-[52px] bg-[#4ddac0] text-white;
+
+  &:hover {
+    @apply bg-[#3cb3a1] text-white;
+  }
 }

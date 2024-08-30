@@ -21,17 +21,21 @@ const Auth = () => {
       className="flex justify-center items-center h-screen bg-slate-400"
       style={{ background: `linear-gradient(to bottom, ${gradientColors})` }}
     >
-      <div className="flex bg-white p-8 gap-8 rounded-xl">
-        <div className="w-[50%] flex flex-col border-r-2">
-          <h1 className="text-4xl text-wrap">Welcome to Music Wheel</h1>
-          <p className="text-wrap">Please sign in to view your music wheel</p>
+      <div className="flex flex-col items-center bg-white p-8 gap-8 rounded-xl min-w-[300px] sm:min-w-[450px]">
+        <div className="w-full text-center flex flex-col border-b-2 pb-6">
+          <p className="text-2xl text-wrap">
+            {isLogin ? "Welcome back" : "Create an account"}
+          </p>
+          <p className="text-wrap"></p>
         </div>
-        <div className="py-8">
+        <div className="h-full">
           {isLogin ? <Login /> : <Signup />}
-          <button className="mt-8" onClick={toggleForm}>
-            {isLogin
-              ? "Don't have an account? Signup"
-              : "Already have an account? Login"}
+          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          <button
+            className="mt-8 ml-1 text-blue-500 hover:underline"
+            onClick={toggleForm}
+          >
+            {isLogin ? "Signup" : "Login"}
           </button>
         </div>
       </div>

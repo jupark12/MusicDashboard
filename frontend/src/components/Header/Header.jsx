@@ -73,11 +73,13 @@ const Header = () => {
         <span className="text-white font-bold text-[24px] flex items-center gap-4">
           <span className="flex flex-col">
             <h1>Music Wheel</h1>
-            <button className="text-sm text-left w-min" onClick={logout}>
-              Logout
-            </button>
+            {user && (
+              <button className="text-sm text-left w-min" onClick={logout}>
+                Logout
+              </button>
+            )}
           </span>
-          {cards?.length > 0 && (
+          {user && (
             <button
               className={`Button-shuffle ${
                 isShuffle ? "Button-shuffle-on" : ""
@@ -89,7 +91,7 @@ const Header = () => {
           )}
         </span>
 
-        {(cards?.length < 40 || !cards) && (
+        {(cards?.length < 40 || !cards) && user && (
           <div className="flex ml-auto w-min">
             <button
               onClick={isUpdateModalOpen ? closeModal : openModal}
@@ -116,21 +118,23 @@ const Header = () => {
         {isUpdateModalOpen && <UploadModal closeModal={closeModal} />}
         {isRecorderModalOpen && <Recorder closeModal={closeRecorderModel} />}
 
-        <div className="w-[167px] ml-auto flex justify-end items-center gap-8">
-          <div className="text-white">
-            <span className={cards?.length < 40 ? "" : "text-red-500"}>
-              {cards?.length ?? 0}/40
-            </span>
+        {user && (
+          <div className="w-[167px] ml-auto flex justify-end items-center gap-8">
+            <div className="text-white">
+              <span className={cards?.length < 40 ? "" : "text-red-500"}>
+                {cards?.length ?? 0}/40
+              </span>
+            </div>
+            <button
+              onClick={handleEditMode}
+              className={`Button ${
+                editMode ? "Button-editStop" : "Button-edit"
+              } px-6  py-2 text-white`}
+            >
+              {editMode ? "Done" : "Edit"}
+            </button>
           </div>
-          <button
-            onClick={handleEditMode}
-            className={`Button ${
-              editMode ? "Button-editStop" : "Button-edit"
-            } px-6  py-2 text-white`}
-          >
-            {editMode ? "Done" : "Edit"}
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

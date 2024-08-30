@@ -27,9 +27,9 @@ function Main() {
 
   return (
     <div className="Main">
+      <Header />
       {user && userSettings ? (
         <div className="flex">
-          <Header />
           <Wheel />
           <Summary />
         </div>

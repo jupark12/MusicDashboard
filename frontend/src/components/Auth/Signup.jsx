@@ -51,21 +51,27 @@ const Signup = () => {
   };
 
   return (
-    <form onSubmit={handleSignup}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Sign Up</button>
-      {error && <p>{error}</p>}
+    <form className="flex gap-4" onSubmit={handleSignup}>
+      <div className="flex flex-col gap-4">
+        <input
+          className="Button-auth pl-4"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <input
+          className="Button-auth pl-4"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button type="submit" className="Button-cta">
+          Sign Up
+        </button>
+      </div>
+      {error && <p className="bg-red-500 text-white p-2 rounded-md">{error}</p>}
     </form>
   );
 };

@@ -1,14 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import leaveAudio from "../assets/audio/Leave.mp3";
-import lifeStyleAudio from "../assets/audio/LIFESTYLE.mp3";
-import tellMeAudio from "../assets/audio/TellMe.mp3";
-import coupAudio from "../assets/audio/coup.mp3";
-import promotionAudio from "../assets/audio/promotion.wav";
-import riverAudio from "../assets/audio/river.wav";
-import peanutAudio from "../assets/audio/peanut.mp3";
-import vibeAudio from "../assets/audio/vibe.mp3";
-import prayAudio from "../assets/audio/pray.mp3";
-import pettyAudio from "../assets/audio/petty.mp3";
 import axios from "axios";
 import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -37,7 +27,11 @@ export const GlobalProvider = ({ children }) => {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
+    // Check if user is logged in
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser == null) {
+        setLoading(false);
+      }
       setUser(currentUser);
     });
     return () => unsubscribe();
@@ -111,6 +105,10 @@ export const GlobalProvider = ({ children }) => {
         setBallColor("#000000");
         setGradientColors1("#373832");
         setGradientColors2("#bca483");
+        setIsPlaying(false);
+        setIsDelete(false);
+        setEditMode(false);
+        setFirstInput(false);
       })
       .catch((error) => {
         console.error("Sign out error", error);
