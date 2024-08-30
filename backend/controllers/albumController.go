@@ -23,6 +23,12 @@ func CreateAlbum(c *gin.Context) {
     // Parse form data and files
     title := c.PostForm("title")
     date := c.PostForm("date")
+    id := c.PostForm("id")
+    objectId, err := primitive.ObjectIDFromHex(id)
+    if err != nil {
+        utils.RespondWithError(c, http.StatusBadRequest, "Invalid ID")
+        return
+    }
 
     // Handling file upload
     audioFile, err := c.FormFile("audio")
@@ -57,11 +63,11 @@ func CreateAlbum(c *gin.Context) {
 
     // Assign the rest of the data to the album struct
     album = models.Album{
-        Title: title,
-        Date:  date,
-        Audio: audioURL,
-        Cover: coverURL,
-        ID:    primitive.NewObjectID(), // Assuming you're using MongoDB
+        Title:  title,
+        Date:   date,
+        Audio:  audioURL,
+        Cover:  coverURL,
+        ID:     objectId, // Convert id to primitive.ObjectID
         UserID: album.UserID,
     }
 

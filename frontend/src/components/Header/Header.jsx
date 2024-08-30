@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UploadModal from "../Modal/UploadModal";
 import Recorder from "../Recorder/Recorder";
 import { GlobalContext } from "../../util/GlobalState";
@@ -68,6 +68,13 @@ const Header = () => {
   const handleShuffle = () => {
     setIsShuffle((prev) => !prev);
   };
+
+  useEffect(() => {
+    console.log("user", user);
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
 
   return (
     <div className="fixed h-[88px] w-full">

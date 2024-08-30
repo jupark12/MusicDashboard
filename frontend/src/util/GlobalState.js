@@ -109,6 +109,7 @@ export const GlobalProvider = ({ children }) => {
         setIsDelete(false);
         setEditMode(false);
         setFirstInput(false);
+        setTotalRotation(270); // Reset totalRotation
         setIsSameAudio(false); // Reset isSameAudio
         setCurrentIndex(0); // Reset currentIndex
         setCards([]); // Reset cards

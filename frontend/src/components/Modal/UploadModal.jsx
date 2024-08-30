@@ -21,6 +21,10 @@ const UploadModal = ({ closeModal }) => {
     setCurrentIndex,
     setTotalRotation,
     user,
+    setUserSettings,
+    ballColor,
+    gradientColors1,
+    gradientColors2,
   } = useContext(GlobalContext);
   const [formData, setFormData] = useState({
     id: "",
@@ -40,9 +44,15 @@ const UploadModal = ({ closeModal }) => {
     if (acceptedFiles.length === 0) return;
     console.log(acceptedFiles);
 
+    const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
     const audioFile = acceptedFiles.find((file) => file.type.includes("audio"));
 
     if (audioFile) {
+      if (audioFile.size > maxFileSize) {
+        setErrorMessage("Audio file size exceeds 5MB.");
+        return;
+      }
       console.log(audioFile);
       setFormData((prevData) => ({
         ...prevData,
@@ -79,6 +89,27 @@ const UploadModal = ({ closeModal }) => {
           const newRotation = 270 + 360 / updatedCards.length;
           return newRotation;
         });
+        setUserSettings((prevSettings) => ({
+          ...prevSettings,
+          albumOrder: updatedCards.map((card) => card.id),
+        }));
+        try {
+          const userSettingsData = {
+            ballColor: ballColor || "",
+            backgroundColor1: gradientColors1 || "",
+            backgroundColor2: gradientColors2 || "",
+            albumOrder: updatedCards.map((card) => card.id),
+            userId: user.uid || "",
+          };
+          axios.put("http://localhost:8080/user/settings", userSettingsData, {
+            headers: {
+              "Content-Type": "application/json",
+              UserID: user.uid,
+            },
+          });
+        } catch (error) {
+          console.error("Error saving changes:", error);
+        }
         return updatedCards;
       });
     }
@@ -132,6 +163,8 @@ const UploadModal = ({ closeModal }) => {
       setUploadLoading(false);
       addCard(formData);
     } catch (error) {
+      setUploadLoading(false);
+      setErrorMessage("Error uploading file. Please try again.");
       console.error("Error uploading file:", error);
     }
   };
