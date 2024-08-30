@@ -1,8 +1,8 @@
 import Wheel from "./components/Wheel/Wheel";
 import Summary from "./components/Summary/Summary";
 import Header from "./components/Header/Header";
-import Auth from "./components/Auth/Auth";
 import React, { useContext, useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { GlobalContext } from "./util/GlobalState";
 import { hexToRgba } from "./util/functions";
 
@@ -28,14 +28,10 @@ function Main() {
   return (
     <div className="Main">
       <Header />
-      {user && userSettings ? (
-        <div className="flex">
-          <Wheel />
-          <Summary />
-        </div>
-      ) : (
-        <Auth />
-      )}
+      <div className="flex">
+        <Wheel />
+        <Summary />
+      </div>
     </div>
   );
 }

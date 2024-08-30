@@ -5,9 +5,11 @@ import { GlobalContext } from "../../util/GlobalState";
 import { FaPlusCircle, FaMicrophone, FaRandom } from "react-icons/fa";
 import "./Header.scss";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   console.log("Header.js");
+  const navigate = useNavigate();
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRecorderModalOpen, setIsRecorderModalOpen] = useState(false);
@@ -74,7 +76,13 @@ const Header = () => {
           <span className="flex flex-col">
             <h1>Music Wheel</h1>
             {user && (
-              <button className="text-sm text-left w-min" onClick={logout}>
+              <button
+                className="text-sm text-left w-min"
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+              >
                 Logout
               </button>
             )}

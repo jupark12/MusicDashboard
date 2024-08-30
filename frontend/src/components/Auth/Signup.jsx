@@ -3,8 +3,11 @@ import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";
 import { GlobalContext } from "../../util/GlobalState";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -43,6 +46,7 @@ const Signup = () => {
         });
 
         console.log("User settings created successfully");
+        navigate("/");
       } catch (error) {
         setError(error.message);
         console.error("Error during signup:", error);

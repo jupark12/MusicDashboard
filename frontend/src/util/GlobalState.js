@@ -109,6 +109,9 @@ export const GlobalProvider = ({ children }) => {
         setIsDelete(false);
         setEditMode(false);
         setFirstInput(false);
+        setIsSameAudio(false); // Reset isSameAudio
+        setCurrentIndex(0); // Reset currentIndex
+        setCards([]); // Reset cards
       })
       .catch((error) => {
         console.error("Sign out error", error);
