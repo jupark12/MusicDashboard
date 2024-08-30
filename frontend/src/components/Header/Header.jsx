@@ -4,14 +4,26 @@ import Recorder from "../Recorder/Recorder";
 import { GlobalContext } from "../../util/GlobalState";
 import { FaPlusCircle, FaMicrophone, FaRandom } from "react-icons/fa";
 import "./Header.scss";
+import axios from "axios";
 
 const Header = () => {
   console.log("Header.js");
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRecorderModalOpen, setIsRecorderModalOpen] = useState(false);
-  const { editMode, setEditMode, cards, setIsShuffle, isShuffle, logout } =
-    useContext(GlobalContext);
+  const {
+    editMode,
+    setEditMode,
+    cards,
+    setIsShuffle,
+    isShuffle,
+    logout,
+    setUserSettings,
+    ballColor,
+    gradientColors1,
+    gradientColors2,
+    user,
+  } = useContext(GlobalContext);
 
   const openModal = () =>
     !isRecorderModalOpen ? setIsUpdateModalOpen(true) : null;
@@ -22,6 +34,32 @@ const Header = () => {
   const closeRecorderModel = () => setIsRecorderModalOpen(false);
 
   const handleEditMode = () => {
+    if (editMode) {
+      // Save the changes
+      console.log("Save the changes");
+
+      try {
+        const userSettingsData = {
+          ballColor: ballColor || "",
+          backgroundColor1: gradientColors1 || "",
+          backgroundColor2: gradientColors2 || "",
+          albumOrder: cards.map((card) => card.id),
+          userId: user.uid || "",
+        };
+        axios.put("http://localhost:8080/user/settings", userSettingsData, {
+          headers: {
+            "Content-Type": "application/json",
+            UserID: user.uid,
+          },
+        });
+      } catch (error) {
+        console.error("Error saving changes:", error);
+      }
+    } else {
+      // Enter edit mode
+      console.log("Enter edit mode");
+    }
+
     setEditMode((prev) => !prev);
   };
 

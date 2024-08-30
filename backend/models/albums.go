@@ -19,7 +19,7 @@ type Album struct {
 }
 
 func SaveAlbum(album *Album) error {
-    result, err := database.DB.InsertOne(context.Background(), album)
+    result, err := database.GetCollection("albums").InsertOne(context.Background(), album)
 
 	if err != nil {
         return err

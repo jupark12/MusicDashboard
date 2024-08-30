@@ -80,7 +80,7 @@ func GetAlbum(c *gin.Context) {
 
 	// Find the album by ID
 	var album models.Album
-	err := database.DB.FindOne(context.Background(), bson.M{"id": id}).Decode(&album)
+	err := database.GetCollection("albums").FindOne(context.Background(), bson.M{"id": id}).Decode(&album)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Album not found"})
 		return
@@ -92,6 +92,10 @@ func GetAlbum(c *gin.Context) {
 func ListAlbums(c *gin.Context) {
     fmt.Println("Listing albums with user ID")
     userID := c.Query("userId")
+    if userID == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "userId query parameter is required"})
+        return
+    }
     albums, err := models.GetAlbumsByUserID(userID)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -106,7 +110,7 @@ func UpdateAlbum(c *gin.Context) {
 
 	// Find the album by ID
 	var album models.Album
-	err := database.DB.FindOne(context.Background(), bson.M{"id": id}).Decode(&album)
+	err := database.GetCollection("albums").FindOne(context.Background(), bson.M{"id": id}).Decode(&album)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Album not found"})
 		return
@@ -124,7 +128,7 @@ func UpdateAlbum(c *gin.Context) {
 	album.Audio = updatedAlbum.Audio
 
 	// Save the updated album
-	_, err = database.DB.ReplaceOne(context.Background(), bson.M{"id": id}, album)
+	_, err = database.GetCollection("albums").ReplaceOne(context.Background(), bson.M{"id": id}, album)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -137,7 +141,7 @@ func DeleteAlbum(c *gin.Context) {
 	id := c.Param("id")
 
 	// Delete the album by ID
-	_, err := database.DB.DeleteOne(context.Background(), bson.M{"id": id})
+	_, err := database.GetCollection("albums").DeleteOne(context.Background(), bson.M{"id": id})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

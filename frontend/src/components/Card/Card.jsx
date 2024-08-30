@@ -89,10 +89,11 @@ const Card = ({ transform, translate, card, index }) => {
         editMode
           ? { gap: "8px" }
           : {
-              transform: `rotate(${transform}deg) translateY(${translate}px) rotate(90deg) ${
-                currentIndex === index ? "scale(1.5)" : ""
+              transform: `rotate3D(0,0,1,${transform}deg) translate3D(0, ${translate}px, 0) rotate(90deg) ${
+                currentIndex === index ? "scale(2)" : ""
               }`,
-              transition: "transform 0.5s ease",
+              transition:
+                "transform 1.7s ease-out, background-color 6s ease-out",
             }
       }
     >

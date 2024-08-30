@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var DB *mongo.Collection
+var DB *mongo.Database
 
 func ConnectDB() {
     fmt.Println("Connecting to database")
@@ -29,9 +29,9 @@ func ConnectDB() {
         log.Fatal(err)
     }
 
-    DB = client.Database("musicdashdb").Collection("albums")
+    DB = client.Database("musicdashdb")
 }
 
 func GetCollection(collectionName string) *mongo.Collection {
-    return DB.Database().Collection(collectionName)
+    return DB.Collection(collectionName)
 }

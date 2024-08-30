@@ -117,12 +117,6 @@ const UploadModal = ({ closeModal }) => {
     tempFormData.append("id", formData.id || "");
     tempFormData.append("userId", user.uid || "");
 
-    // Log the FormData entries
-    console.log("FormData entries:");
-    for (let [key, value] of tempFormData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
     try {
       const response = await axios.post(
         "http://localhost:8080/albums/upload",
@@ -157,7 +151,7 @@ const UploadModal = ({ closeModal }) => {
     setCurrentSlide((slide) => (slide - 1 >= 0 ? slide - 1 : 1));
   };
 
-  if (!uploadLoading) {
+  if (uploadLoading) {
     return (
       <div className="UploadModal">
         <div className="flex items-center justify-center">

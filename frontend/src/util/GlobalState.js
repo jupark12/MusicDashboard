@@ -33,130 +33,89 @@ export const GlobalProvider = ({ children }) => {
   const [firstInput, setFirstInput] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userSettings, setUserSettings] = useState({});
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false);
-      console.log(currentUser);
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    // Get User Setting and set ball color, and gradient colors
+    if (user) {
+      setLoading(true);
+
+      axios
+        .get("http://localhost:8080/user/settings", {
+          params: {
+            userId: user.uid,
+          },
+        })
+        .then((response) => {
+          console.log("User settings:", response.data);
+          if (response.data) {
+            setUserSettings(response.data);
+            setBallColor(response.data.ballColor);
+            setGradientColors1(response.data.backgroundColor1);
+            setGradientColors2(response.data.backgroundColor2);
+
+            //Fetch Cards
+            try {
+              axios
+                .get("http://localhost:8080/albums", {
+                  params: {
+                    userId: user.uid,
+                  },
+                })
+                .then((cardResponse) => {
+                  console.log("Card response:", cardResponse.data);
+                  if (cardResponse.data?.length > 0) {
+                    setCards(() => {
+                      const albumOrder = response.data?.albumOrder || [];
+                      console.log("albumOrder", albumOrder);
+                      if (albumOrder.length > 0) {
+                        const newCards = albumOrder
+                          .map((id) =>
+                            cardResponse.data.find((card) => card.id === id)
+                          )
+                          .filter((card) => card !== undefined);
+                        console.log("New cards:", newCards);
+                        return newCards;
+                      } else {
+                        return cardResponse.data;
+                      }
+                    });
+                  }
+                });
+            } catch (error) {
+              console.error("Error fetching cards:", error);
+            }
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching settings:", error);
+          setLoading(false);
+        });
+    }
+  }, [user]);
 
   const logout = () => {
     signOut(auth)
       .then(() => {
         console.log("User signed out");
+        setUser(null);
+        setBallColor("#000000");
+        setGradientColors1("#373832");
+        setGradientColors2("#bca483");
       })
       .catch((error) => {
         console.error("Sign out error", error);
       });
   };
-
-  const initialCards = [
-    {
-      id: 1,
-      title: "Leave",
-      cover: require("../assets/imgs/yellow.png"),
-      date: "08/10/24",
-      notes: "A cheerful tune that brings warmth and happiness on sunny days.",
-      audio: leaveAudio,
-    },
-    {
-      id: 2,
-      title: "LifeStyle",
-      cover: require("../assets/imgs/vultures.png"),
-      date: "09/10/24",
-      notes: "A soothing melody perfect for a romantic night under the stars.",
-      audio: lifeStyleAudio,
-    },
-    {
-      id: 3,
-      title: "Tell Me",
-      cover: require("../assets/imgs/graduation.png"),
-      date: "10/10/24",
-      notes: "An upbeat dance track that keeps you moving all night long.",
-      audio: tellMeAudio,
-    },
-    {
-      id: 4,
-      title: "Coop",
-      cover: require("../assets/imgs/jik.png"),
-      date: "11/10/24",
-      notes: "A dreamy song that takes you on a journey through sound.",
-      audio: coupAudio,
-    },
-    {
-      id: 5,
-      title: "Promotion",
-      cover: require("../assets/imgs/mbdtf.png"),
-      date: "12/10/24",
-      notes:
-        "A fun and catchy tune that invites everyone to hit the dance floor.",
-      audio: promotionAudio,
-    },
-    {
-      id: 6,
-      title: "River",
-      cover: require("../assets/imgs/yeezus.png"),
-      date: "01/10/24",
-      notes: "An inspiring anthem about following your dreams and aspirations.",
-      audio: riverAudio,
-    },
-    {
-      id: 7,
-      title: "Peanut Butter",
-      cover: require("../assets/imgs/college.png"),
-      date: "02/10/24",
-      notes: "A reflective song that captures the nostalgia of the past.",
-      audio: peanutAudio,
-    },
-    {
-      id: 8,
-      title: "Good Vibes",
-      cover: require("../assets/imgs/late.png"),
-      date: "03/10/24",
-      notes:
-        "A futuristic sound that blends electronic beats with smooth vocals.",
-      audio: vibeAudio,
-    },
-    {
-      id: 9,
-      title: "Pray For Me",
-      cover: require("../assets/imgs/donda.png"),
-      date: "04/10/24",
-      notes: "A heartwarming ballad about love and connection.",
-      audio: prayAudio,
-    },
-    {
-      id: 10,
-      title: "Petty Love",
-      cover: require("../assets/imgs/pablo.png"),
-      date: "05/10/24",
-      notes: "An adventurous song that takes you on a musical exploration.",
-      audio: pettyAudio,
-    },
-  ];
-
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    const fetchCards = async () => {
-      if (user) {
-        try {
-          const response = await axios.get("http://localhost:8080/albums", {
-            params: {
-              userId: user.uid,
-            },
-          });
-          setCards(response.data);
-        } catch (error) {
-          console.error("Error fetching cards:", error);
-        }
-      }
-    };
-    fetchCards();
-  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -189,6 +148,8 @@ export const GlobalProvider = ({ children }) => {
         setFirstInput,
         user,
         setUser,
+        userSettings,
+        setUserSettings,
         loading,
         setLoading,
         logout,

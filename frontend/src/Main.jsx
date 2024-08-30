@@ -8,7 +8,7 @@ import { hexToRgba } from "./util/functions";
 
 function Main() {
   console.log("Main.js");
-  const { user, loading, gradientColors1, gradientColors2 } =
+  const { user, userSettings, loading, gradientColors1, gradientColors2 } =
     useContext(GlobalContext);
   const gradientColors = `${hexToRgba(gradientColors1)} 0%, ${hexToRgba(
     gradientColors2
@@ -27,7 +27,7 @@ function Main() {
 
   return (
     <div className="Main">
-      {user ? (
+      {user && userSettings ? (
         <div className="flex">
           <Header />
           <Wheel />

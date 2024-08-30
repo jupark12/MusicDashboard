@@ -39,7 +39,7 @@ const Wheel = () => {
               ? { display: "flex" }
               : {
                   transform: `rotate(${totalRotation}deg)`,
-                  transition: "transform 1.0s ease-out",
+                  transition: "transform 1.5s ease-out",
                   left: `${40 + cards.length * 1.2}vw`,
                 }
           }
