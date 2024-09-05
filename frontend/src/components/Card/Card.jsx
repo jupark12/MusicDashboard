@@ -1,7 +1,6 @@
 import "./Card.scss";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../util/GlobalState";
-import { usePalette } from "color-thief-react";
 import { FaTrash, FaCheck } from "react-icons/fa";
 
 const Card = ({ transform, translate, card, index }) => {
@@ -17,8 +16,8 @@ const Card = ({ transform, translate, card, index }) => {
     setIsDelete,
     setIsSameAudio,
     setFirstInput,
+    ballColor,
   } = useContext(GlobalContext);
-  const { data: bgColor } = usePalette(cover, 3, "hex"); // Get the palette of the current card cover
   const { isPlaying, setIsPlaying } = useContext(GlobalContext);
 
   const [editedTitle, setEditedTitle] = useState(title); // State variable to hold the edited title
@@ -99,14 +98,7 @@ const Card = ({ transform, translate, card, index }) => {
     >
       {editMode && (
         <div className="relative flex justify-around w-full">
-          <p
-            className="font-bold"
-            style={{
-              color: bgColor?.[0] || "#000000",
-            }}
-          >
-            {index + 1}.
-          </p>
+          <p className="font-bold">{index + 1}.</p>
           <button
             onClick={handleDelete}
             className="Card-trashIcon absolute text-white z-10 top-[-15px] right-[-15px]"
@@ -120,7 +112,14 @@ const Card = ({ transform, translate, card, index }) => {
         className={`Card-cover ${isPlaying ? "Card-pulse" : ""}`}
         onClick={handleCardClick}
       >
-        <img src={cover} alt={title} className="h-20 w-20 p-1 rounded-full" />
+        {card.cover ? (
+          <img src={cover} alt={title} className="h-20 w-20 p-1 rounded-full" />
+        ) : (
+          <div
+            className="h-20 w-20 p-1 rounded-full"
+            style={{ backgroundColor: ballColor }}
+          ></div>
+        )}
       </div>
 
       {editMode ? (
@@ -135,9 +134,6 @@ const Card = ({ transform, translate, card, index }) => {
               className={`font-bold w-[100%] ${
                 showSubmitButton ? "pl-2" : "text-center"
               }`}
-              style={{
-                color: bgColor?.[0] || "#000000",
-              }}
             />
             <button
               type="submit"
@@ -153,12 +149,7 @@ const Card = ({ transform, translate, card, index }) => {
         </div>
       ) : (
         <div className={`Card-title text-center`}>
-          <p
-            className="font-bold"
-            style={{
-              color: bgColor?.[0] || "#000000",
-            }}
-          >
+          <p className="font-bold">
             <span className="text-[12px]">{index + 1}. </span>
             {title}
           </p>

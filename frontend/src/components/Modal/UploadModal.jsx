@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { GlobalContext } from "../../util/GlobalState";
 import { useDropzone } from "react-dropzone";
-import Recorder from "../Recorder/Recorder";
+import Recorder from "../Recorder";
 import {
   FaChevronLeft,
   FaChevronRight,

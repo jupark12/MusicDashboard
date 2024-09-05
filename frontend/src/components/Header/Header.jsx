@@ -20,6 +20,7 @@ const Header = () => {
     setIsShuffle,
     isShuffle,
     logout,
+    userSettings,
     setUserSettings,
     ballColor,
     gradientColors1,
@@ -37,25 +38,33 @@ const Header = () => {
 
   const handleEditMode = () => {
     if (editMode) {
-      // Save the changes
-      console.log("Save the changes");
+      const userSettingsData = {
+        ID: userSettings.ID,
+        userid: user.uid || "",
+        albumOrder: cards.map((card) => card.id),
+        ballColor: ballColor || "",
+        backgroundColor1: gradientColors1 || "",
+        backgroundColor2: gradientColors2 || "",
+      };
 
-      try {
-        const userSettingsData = {
-          ballColor: ballColor || "",
-          backgroundColor1: gradientColors1 || "",
-          backgroundColor2: gradientColors2 || "",
-          albumOrder: cards.map((card) => card.id),
-          userId: user.uid || "",
-        };
-        axios.put("http://localhost:8080/user/settings", userSettingsData, {
-          headers: {
-            "Content-Type": "application/json",
-            UserID: user.uid,
-          },
-        });
-      } catch (error) {
-        console.error("Error saving changes:", error);
+      if (JSON.stringify(userSettings) == JSON.stringify(userSettingsData)) {
+        console.log("No changes made");
+        setEditMode((prev) => !prev);
+        return;
+      } else {
+        try {
+          axios.put("http://localhost:8080/user/settings", userSettingsData, {
+            headers: {
+              "Content-Type": "application/json",
+              UserID: user.uid,
+            },
+          });
+          setUserSettings(userSettingsData);
+          // Save the changes
+          console.log("Save the edit changes");
+        } catch (error) {
+          console.error("Error saving changes:", error);
+        }
       }
     } else {
       // Enter edit mode

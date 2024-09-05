@@ -18,6 +18,7 @@ const Tracklist = () => {
     isPlaying,
     setIsSameAudio,
     setFirstInput,
+    ballColor,
   } = useContext(GlobalContext);
 
   const handleTrackClick = (event) => {
@@ -87,6 +88,7 @@ const Tracklist = () => {
                 onClick={handleTrackClick}
                 editMode={editMode}
                 isPlaying={isPlaying}
+                ballColor={ballColor}
               />
             ))}
           </div>
@@ -103,6 +105,7 @@ const SortableTrack = ({
   onClick,
   editMode,
   isPlaying,
+  ballColor,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -123,7 +126,12 @@ const SortableTrack = ({
         onClick={onClick}
       >
         {index + 1}. {card.title}{" "}
-        {isActive && isPlaying && <div className="squiggle"></div>}
+        {isActive && isPlaying && (
+          <div
+            className="squiggle"
+            style={{ backgroundColor: ballColor }}
+          ></div>
+        )}
       </div>
 
       {editMode && (
