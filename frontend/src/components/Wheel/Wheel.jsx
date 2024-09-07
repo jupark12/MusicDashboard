@@ -12,6 +12,7 @@ const Wheel = () => {
   const gradientColors = `${hexToRgba(gradientColors1)} 0%, ${hexToRgba(
     gradientColors2
   )} 150%`;
+  console.log("Cards", cards);
 
   return (
     <div

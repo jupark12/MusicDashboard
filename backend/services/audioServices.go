@@ -2,13 +2,17 @@ package services
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
+	"time"
 
 	"mime/multipart"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+
+	"github.com/google/uuid"
 )
 
 func HandleFileUpload(file *multipart.FileHeader) (string, error) {
@@ -39,9 +43,20 @@ func uploadToS3(fileHeader *multipart.FileHeader) (string, error) {
     }
     defer file.Close()
 
+    // Get the current timestamp
+    currentTime := time.Now()
+    // Generate a UUID for the file
+    uniqueID := uuid.New().String()
+
     // Define the S3 bucket and key
     bucket := "musicdashboardaudiobucket"
-    key := filepath.Base(fileHeader.Filename)
+    keySuffix := fileHeader.Filename + "_" + fmt.Sprintf("%d_%02d_%02d_%s",
+    currentTime.Year(),
+    currentTime.Month(),
+    currentTime.Day(),
+    uniqueID,)
+    log.Println(keySuffix)
+    key := filepath.Base(keySuffix)
 
 	fmt.Println("Uploading file to S3")
 

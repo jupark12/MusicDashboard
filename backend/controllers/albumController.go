@@ -145,13 +145,27 @@ func UpdateAlbum(c *gin.Context) {
 
 func DeleteAlbum(c *gin.Context) {
 	id := c.Param("id")
+    fmt.Println("Deleting album with ID: ", id)
+
+    objID, err := primitive.ObjectIDFromHex(id)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid album ID"})
+        return
+    }
+
 
 	// Delete the album by ID
-	_, err := database.GetCollection("albums").DeleteOne(context.Background(), bson.M{"id": id})
-	if err != nil {
+	result, err := database.GetCollection("albums").DeleteOne(context.Background(), bson.M{"_id": objID})
+
+    if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+    if result.DeletedCount == 0 {
+        c.JSON(http.StatusNotFound, gin.H{"message": "Album not found"})
+        return
+    }
 
 	c.JSON(http.StatusOK, gin.H{"message": "Album deleted"})
 }

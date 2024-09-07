@@ -2,6 +2,7 @@ import "./Card.scss";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../util/GlobalState";
 import { FaTrash, FaCheck } from "react-icons/fa";
+import axios from "axios";
 
 const Card = ({ transform, translate, card, index }) => {
   const { title, cover } = card;
@@ -24,18 +25,30 @@ const Card = ({ transform, translate, card, index }) => {
   const handleDelete = () => {
     if (cards.length === 0) return;
 
-    const updatedCards = cards.filter((_, tempIndex) => tempIndex !== index);
-    setCards(updatedCards);
-
-    setCurrentIndex((prevIndex) => {
-      const newCurrentIndex = prevIndex > index ? prevIndex - 1 : prevIndex;
-      setIsSameAudio(prevIndex === index ? false : true);
-      setTotalRotation(() => {
-        const newRotation = 270 - (360 / updatedCards.length) * newCurrentIndex;
-        return newRotation;
+    try {
+      axios.delete(`http://localhost:8080/albums/${card.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      return newCurrentIndex;
-    });
+      const updatedCards = cards.filter((_, tempIndex) => tempIndex !== index);
+      setCards(updatedCards);
+
+      setCurrentIndex((prevIndex) => {
+        const newCurrentIndex = prevIndex > index ? prevIndex - 1 : prevIndex;
+        setIsSameAudio(prevIndex === index ? false : true);
+        setTotalRotation(() => {
+          const newRotation =
+            270 - (360 / updatedCards.length) * newCurrentIndex;
+          return newRotation;
+        });
+        return newCurrentIndex;
+      });
+      // Save the changes
+      console.log("Deleted card", updatedCards);
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
   };
 
   const handleCardClick = () => {
