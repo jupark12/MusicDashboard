@@ -47,8 +47,6 @@ const Card = ({ transform, translate, card, index }) => {
         });
         return newCurrentIndex;
       });
-      // Save the changes
-      console.log("Deleted card", updatedCards);
     } catch (error) {
       console.error("Error deleting card:", error);
     }
@@ -81,7 +79,6 @@ const Card = ({ transform, translate, card, index }) => {
       }
       return card;
     });
-    console.log("with edited title", updatedCards);
     setCards(updatedCards);
   };
 

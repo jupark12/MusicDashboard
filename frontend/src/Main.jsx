@@ -7,7 +7,6 @@ import { GlobalContext } from "./util/GlobalState";
 import { hexToRgba } from "./util/functions";
 
 function Main() {
-  console.log("Main.js");
   const { user, userSettings, loading, gradientColors1, gradientColors2 } =
     useContext(GlobalContext);
   const gradientColors = `${hexToRgba(gradientColors1)} 0%, ${hexToRgba(

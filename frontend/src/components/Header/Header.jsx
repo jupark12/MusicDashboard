@@ -8,7 +8,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  console.log("Header.js");
   const navigate = useNavigate();
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -48,7 +47,6 @@ const Header = () => {
       };
 
       if (JSON.stringify(userSettings) == JSON.stringify(userSettingsData)) {
-        console.log("No changes made");
         setEditMode((prev) => !prev);
         return;
       } else {
@@ -65,14 +63,12 @@ const Header = () => {
           );
           setUserSettings(userSettingsData);
           // Save the changes
-          console.log("Save the edit changes");
         } catch (error) {
           console.error("Error saving changes:", error);
         }
       }
     } else {
       // Enter edit mode
-      console.log("Enter edit mode");
     }
 
     setEditMode((prev) => !prev);

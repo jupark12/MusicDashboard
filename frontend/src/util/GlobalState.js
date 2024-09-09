@@ -52,7 +52,6 @@ export const GlobalProvider = ({ children }) => {
           }
         )
         .then((response) => {
-          console.log("User settings:", response.data);
           if (response.data) {
             setUserSettings(response.data);
             setBallColor(response.data.ballColor);
@@ -71,18 +70,15 @@ export const GlobalProvider = ({ children }) => {
                   }
                 )
                 .then((cardResponse) => {
-                  console.log("Card response:", cardResponse.data);
                   if (cardResponse.data?.length > 0) {
                     setCards(() => {
                       const albumOrder = response.data?.albumOrder || [];
-                      console.log("albumOrder", albumOrder);
                       if (albumOrder.length > 0) {
                         const newCards = albumOrder
                           .map((id) =>
                             cardResponse.data.find((card) => card.id === id)
                           )
                           .filter((card) => card !== undefined);
-                        console.log("New cards:", newCards);
                         return newCards;
                       } else {
                         return cardResponse.data;
@@ -106,7 +102,6 @@ export const GlobalProvider = ({ children }) => {
   const logout = () => {
     signOut(auth)
       .then(() => {
-        console.log("User signed out");
         setUser(null);
         setBallColor("#000000");
         setGradientColors1("#373832");

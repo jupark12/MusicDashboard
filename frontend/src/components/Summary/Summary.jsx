@@ -48,7 +48,6 @@ const Summary = () => {
 
   useEffect(() => {
     isSameAudioRef.current = isSameAudio;
-    console.log("firstInput", firstInput);
   }, [currentIndex, cards, firstInput]);
 
   const createWavesurfer = (tempCards, index) => {
@@ -96,14 +95,11 @@ const Summary = () => {
   };
 
   useEffect(() => {
-    console.log(wavesurferRef.current, currentIndex, isSameAudioRef.current); // Debugging
     if (wavesurferRef.current && !isSameAudioRef.current) {
-      console.log("destroying");
       wavesurferRef.current.destroy();
     }
     if (!cards?.[currentIndex]?.audio || !waveformRef.current || isSameAudio)
       return;
-    console.log("creating");
     createWavesurfer(cards, currentIndex);
   }, [currentIndex, cards]);
 

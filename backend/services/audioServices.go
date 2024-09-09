@@ -78,7 +78,7 @@ func uploadToS3(fileHeader *multipart.FileHeader) (string, error) {
 }
 
 // GeneratePresignedURL generates a presigned URL for uploading a file to S3
-func GeneratePresignedURL(fileHeader *multipart.FileHeader) (string, error) {
+func GeneratePresignedURL(fileName string, fileType string) (string, error) {
     // Initialize AWS session with credentials
     sess, err := session.NewSession(&aws.Config{
         Region: aws.String("us-east-1"),
@@ -97,7 +97,7 @@ func GeneratePresignedURL(fileHeader *multipart.FileHeader) (string, error) {
 
     // Define the S3 bucket and key
     bucket := "musicdashboardaudiobucket"
-    keySuffix := fileHeader.Filename + "_" + fmt.Sprintf("%d_%02d_%02d_%s",
+    keySuffix := fileName + "_" + fmt.Sprintf("%d_%02d_%02d_%s",
         currentTime.Year(),
         currentTime.Month(),
         currentTime.Day(),
@@ -110,7 +110,7 @@ func GeneratePresignedURL(fileHeader *multipart.FileHeader) (string, error) {
     req, _ := svc.PutObjectRequest(&s3.PutObjectInput{
         Bucket:      aws.String(bucket),
         Key:         aws.String(key),
-        ContentType: aws.String(fileHeader.Header.Get("Content-Type")), // Set content type
+        ContentType: aws.String(fileType), // Set content type
     })
     urlStr, err := req.Presign(15 * time.Minute)
     if err != nil {

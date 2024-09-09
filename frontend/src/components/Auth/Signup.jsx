@@ -25,11 +25,8 @@ const Signup = () => {
     ).then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log("User signed up:", user);
 
       try {
-        console.log("Creating User Settings");
-
         const userData = {
           ballColor: "#000000",
           backgroundColor1: "#373832",
@@ -49,7 +46,6 @@ const Signup = () => {
           }
         );
 
-        console.log("User settings created successfully");
         navigate("/");
       } catch (error) {
         setError(error.message);

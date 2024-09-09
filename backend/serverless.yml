@@ -14,33 +14,76 @@ functions:
       - http:
           path: albums/upload
           method: post
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: albums/{id}
           method: get
+          cors: true
       - http:
           path: albums
           method: get
+          cors: true
       - http:
           path: albums/{id}
           method: put
+          cors: true
       - http:
           path: albums/{id}
           method: delete
+          cors: true
       - http:
           path: user/signup
           method: post
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: user/settings
           method: get
+          cors: true
       - http:
           path: user/settings
           method: put
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: user/settings/{id}
           method: delete
+          cors: true
       - http:
           path: presigned-url
           method: post
+          cors: true
 
 package:
   patterns:

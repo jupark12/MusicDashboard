@@ -7,8 +7,6 @@ import Main from "./Main";
 import { GlobalProvider } from "./util/GlobalState";
 
 function App() {
-  console.log("App.js");
-
   return (
     <div className="App">
       <GlobalProvider>

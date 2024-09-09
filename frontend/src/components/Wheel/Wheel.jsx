@@ -5,14 +5,12 @@ import "./Wheel.scss";
 import { hexToRgba } from "../../util/functions";
 
 const Wheel = () => {
-  console.log("Wheel.js");
   const { cards, editMode, ballColor, gradientColors1, gradientColors2 } =
     useContext(GlobalContext);
   const { totalRotation } = useContext(GlobalContext);
   const gradientColors = `${hexToRgba(gradientColors1)} 0%, ${hexToRgba(
     gradientColors2
   )} 150%`;
-  console.log("Cards", cards);
 
   return (
     <div

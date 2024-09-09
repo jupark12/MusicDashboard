@@ -11,7 +11,7 @@ import {
 import "./UploadModal.scss";
 import axios from "axios";
 import ObjectID from "bson-objectid";
-import { set } from "lodash";
+import { drop, set } from "lodash";
 
 const UploadModal = ({ closeModal }) => {
   const {
@@ -33,16 +33,14 @@ const UploadModal = ({ closeModal }) => {
     audio: "",
     date: "",
   });
-  const [droppedAudioFile, setDroppedAudioFile] = useState(""); // Updated state variable name
-  const [droppedImageFile, setDroppedImageFile] = useState("");
+  const [droppedAudioFile, setDroppedAudioFile] = useState(null); // Updated state variable name
+  const [droppedImageFile, setDroppedImageFile] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(1); // Track the current slide
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadLoading, setUploadLoading] = useState(false);
 
   const onDrop = (acceptedFiles) => {
-    console.log(acceptedFiles);
     if (acceptedFiles.length === 0) return;
-    console.log(acceptedFiles);
 
     const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
 
@@ -53,7 +51,6 @@ const UploadModal = ({ closeModal }) => {
         setErrorMessage("Audio file size exceeds 5MB.");
         return;
       }
-      console.log(audioFile);
       setFormData((prevData) => ({
         ...prevData,
         audio: URL.createObjectURL(audioFile),
@@ -85,7 +82,6 @@ const UploadModal = ({ closeModal }) => {
         const updatedCards = [...cards, newCard];
         setCurrentIndex(updatedCards.length - 1); // Update the current index to the new card
         setTotalRotation((prevRotation) => {
-          console.log(prevRotation, updatedCards.length, currentIndex);
           const newRotation = 270 + 360 / updatedCards.length;
           return newRotation;
         });
@@ -138,34 +134,79 @@ const UploadModal = ({ closeModal }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setUploadLoading(true);
-    console.log(droppedAudioFile, droppedImageFile, formData);
 
     const tempFormData = new FormData();
-    if (droppedAudioFile) {
-      tempFormData.append("audio", droppedAudioFile);
-    }
-    if (droppedImageFile) {
-      tempFormData.append("cover", droppedImageFile);
-    }
     tempFormData.append("title", formData.title || "");
     tempFormData.append("date", formData.date || null);
     tempFormData.append("id", formData.id || "");
     tempFormData.append("userId", user.uid || "");
 
     try {
+      if (droppedImageFile) {
+        //Get S3 Presign URL for img file
+        const responsePresignImg = await axios.post(
+          "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/presigned-url",
+          {
+            fileName: droppedImageFile.name || "",
+            fileType: droppedImageFile.type || "",
+          }
+        );
+
+        const imgUpload = await axios.put(
+          responsePresignImg.data.url,
+          droppedImageFile
+        );
+
+        const presignedImgUrl = responsePresignImg?.data?.url.split("?")[0];
+        if (presignedImgUrl) {
+          tempFormData.append("cover", presignedImgUrl);
+        }
+      }
+
+      if (droppedAudioFile) {
+        //Get S3 Presign URL for audio file
+        const responsePresignAudio = await axios.post(
+          "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/presigned-url",
+          {
+            fileName: droppedAudioFile.name || "",
+            fileType: droppedAudioFile.type || "",
+            meta: {},
+          },
+          {
+            headers: {
+              "Content-Type": droppedAudioFile.type,
+            },
+          }
+        );
+
+        const audioUpload = await axios.put(
+          responsePresignAudio.data.url,
+          droppedAudioFile,
+          {
+            headers: {
+              "Content-Type": droppedAudioFile.type,
+            },
+          }
+        );
+
+        const presignedAudioUrl = responsePresignAudio?.data?.url.split("?")[0];
+        if (presignedAudioUrl) {
+          tempFormData.append("audio", presignedAudioUrl);
+        }
+      }
+
+      // Upload album data to API, using the presigned URL
       const response = await axios.post(
         "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/albums/upload",
         tempFormData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             UserID: user.uid,
           },
         }
       );
-      console.log("File uploaded successfully:", response.data.url);
-      setUploadLoading(false);
       addCard(formData);
+      setUploadLoading(false);
     } catch (error) {
       setUploadLoading(false);
       setErrorMessage("Error uploading file. Please try again.");

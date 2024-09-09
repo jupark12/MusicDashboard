@@ -49,7 +49,7 @@ func init() {
     })
 
     // Album routes
-    router.POST("/albums/upload", controllers.CreateAlbum)
+    router.POST("/albums/upload", controllers.UploadAlbum)
     router.GET("/albums/:id", controllers.GetAlbum)
     router.GET("/albums", controllers.ListAlbums)
     router.PUT("/albums/:id", controllers.UpdateAlbum)
