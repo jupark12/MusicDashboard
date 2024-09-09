@@ -1,0 +1,63 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.test
+*.out
+bootstrap
+
+# Build and test outputs
+/build/
+*.log
+*.coverage
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Go module files
+go.sum
+go.mod
+
+# Directories for compiled code
+bin/
+vendor/
+
+# Dependency directories
+Godeps/
+
+# Serverless Framework directories
+.serverless/
+.slsignore
+
+# AWS Lambda package files
+*.zip
+
+# IDE / Text Editor config files
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs and debug information
+*.log
+*.tmp
+
+# Backup and temp files
+*~
+*.swp
+*.bak
+
+# GoLand/JetBrains specific files
+.idea/
+
+# AWS credentials (if you accidentally add them)
+.aws/
+
+# Ignore environment variable files
+.env
+.env.*

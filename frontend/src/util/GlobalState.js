@@ -43,11 +43,14 @@ export const GlobalProvider = ({ children }) => {
       setLoading(true);
 
       axios
-        .get("http://localhost:8080/user/settings", {
-          params: {
-            userId: user.uid,
-          },
-        })
+        .get(
+          "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/user/settings",
+          {
+            params: {
+              userId: user.uid,
+            },
+          }
+        )
         .then((response) => {
           console.log("User settings:", response.data);
           if (response.data) {
@@ -59,11 +62,14 @@ export const GlobalProvider = ({ children }) => {
             //Fetch Cards
             try {
               axios
-                .get("http://localhost:8080/albums", {
-                  params: {
-                    userId: user.uid,
-                  },
-                })
+                .get(
+                  "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/albums",
+                  {
+                    params: {
+                      userId: user.uid,
+                    },
+                  }
+                )
                 .then((cardResponse) => {
                   console.log("Card response:", cardResponse.data);
                   if (cardResponse.data?.length > 0) {

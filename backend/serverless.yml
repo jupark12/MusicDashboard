@@ -1,0 +1,48 @@
+service: music-wheel-api
+frameworkVersion: ">=4.2.5"
+
+provider:
+  name: aws
+  runtime: provided.al2
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  api:
+    handler: bin/main
+    events:
+      - http:
+          path: albums/upload
+          method: post
+      - http:
+          path: albums/{id}
+          method: get
+      - http:
+          path: albums
+          method: get
+      - http:
+          path: albums/{id}
+          method: put
+      - http:
+          path: albums/{id}
+          method: delete
+      - http:
+          path: user/signup
+          method: post
+      - http:
+          path: user/settings
+          method: get
+      - http:
+          path: user/settings
+          method: put
+      - http:
+          path: user/settings/{id}
+          method: delete
+      - http:
+          path: presigned-url
+          method: post
+
+package:
+  patterns:
+    - "!*/**"
+    - "bin/main"

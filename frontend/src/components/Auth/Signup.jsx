@@ -38,12 +38,16 @@ const Signup = () => {
         };
 
         // Post user data to your backend
-        axios.post("http://localhost:8080/user/signup", userData, {
-          headers: {
-            "Content-Type": "application/json",
-            UserID: user.uid,
-          },
-        });
+        axios.post(
+          "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/user/signup",
+          userData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              UserID: user.uid,
+            },
+          }
+        );
 
         console.log("User settings created successfully");
         navigate("/");

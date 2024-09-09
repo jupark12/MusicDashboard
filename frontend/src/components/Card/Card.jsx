@@ -26,11 +26,14 @@ const Card = ({ transform, translate, card, index }) => {
     if (cards.length === 0) return;
 
     try {
-      axios.delete(`http://localhost:8080/albums/${card.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      axios.delete(
+        `https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/albums/${card.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const updatedCards = cards.filter((_, tempIndex) => tempIndex !== index);
       setCards(updatedCards);
 

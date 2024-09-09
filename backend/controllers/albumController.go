@@ -169,3 +169,20 @@ func DeleteAlbum(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Album deleted"})
 }
+
+// GetPresignedURL handles the request to get a presigned URL for file upload
+func GetPresignedURL(c *gin.Context) {
+    fileHeader, err := c.FormFile("file")
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file"})
+        return
+    }
+
+    url, err := services.GeneratePresignedURL(fileHeader)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate presigned URL"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"url": url})
+}

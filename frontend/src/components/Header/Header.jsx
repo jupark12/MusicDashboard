@@ -53,12 +53,16 @@ const Header = () => {
         return;
       } else {
         try {
-          axios.put("http://localhost:8080/user/settings", userSettingsData, {
-            headers: {
-              "Content-Type": "application/json",
-              UserID: user.uid,
-            },
-          });
+          axios.put(
+            "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/user/settings",
+            userSettingsData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                UserID: user.uid,
+              },
+            }
+          );
           setUserSettings(userSettingsData);
           // Save the changes
           console.log("Save the edit changes");

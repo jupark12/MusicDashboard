@@ -101,12 +101,16 @@ const UploadModal = ({ closeModal }) => {
             albumOrder: updatedCards.map((card) => card.id),
             userId: user.uid || "",
           };
-          axios.put("http://localhost:8080/user/settings", userSettingsData, {
-            headers: {
-              "Content-Type": "application/json",
-              UserID: user.uid,
-            },
-          });
+          axios.put(
+            "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/user/settings",
+            userSettingsData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                UserID: user.uid,
+              },
+            }
+          );
         } catch (error) {
           console.error("Error saving changes:", error);
         }
@@ -150,7 +154,7 @@ const UploadModal = ({ closeModal }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/albums/upload",
+        "https://v59siytxq6.execute-api.us-east-1.amazonaws.com/prod/albums/upload",
         tempFormData,
         {
           headers: {
