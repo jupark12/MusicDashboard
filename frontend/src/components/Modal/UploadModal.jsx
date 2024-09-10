@@ -159,7 +159,12 @@ const UploadModal = ({ closeModal }) => {
 
         const imgUpload = await axios.put(
           responsePresignImg.data.url,
-          droppedImageFile
+          droppedImageFile,
+          {
+            headers: {
+              "Content-Type": droppedImageFile.type,
+            },
+          }
         );
 
         const presignedImgUrl = responsePresignImg?.data?.url.split("?")[0];
@@ -175,7 +180,6 @@ const UploadModal = ({ closeModal }) => {
           {
             fileName: droppedAudioFile.name || "",
             fileType: droppedAudioFile.type || "",
-            meta: {},
           },
           {
             headers: {
