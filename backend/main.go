@@ -30,10 +30,12 @@ func init() {
         corsOrigins = "http://localhost:3000" // Default for local development
     }
 
+    fmt.Println("CORS origins:", corsOrigins)
+
     router.Use(cors.New(cors.Config{
         AllowOrigins:     strings.Split(corsOrigins, ","),
-        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-        AllowHeaders:     []string{"Content-Type", "Authorization", "UserID"},
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Content-Type", "Authorization", "UserID", "X-Amz-Date", "X-Amz-Security-Token", "X-Api-Key", "X-Amzn-Trace-Id"},
         AllowCredentials: true,
     }))
 

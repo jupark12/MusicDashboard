@@ -15,7 +15,8 @@ functions:
           path: albums/upload
           method: post
           cors:
-            origin: "*"
+            origin:
+              - https://music-dashboard-jade.vercel.app
             headers:
               - Content-Type
               - X-Amz-Date
@@ -29,24 +30,73 @@ functions:
       - http:
           path: albums/{id}
           method: get
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: albums
           method: get
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: albums/{id}
           method: put
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: albums/{id}
           method: delete
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: user/signup
           method: post
           cors:
-            origin: "*"
+            origin:
+              - https://music-dashboard-jade.vercel.app
             headers:
               - Content-Type
               - X-Amz-Date
@@ -60,12 +110,25 @@ functions:
       - http:
           path: user/settings
           method: get
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: user/settings
           method: put
           cors:
-            origin: "*"
+            origin:
+              - https://music-dashboard-jade.vercel.app
             headers:
               - Content-Type
               - X-Amz-Date
@@ -79,11 +142,35 @@ functions:
       - http:
           path: user/settings/{id}
           method: delete
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
       - http:
           path: presigned-url
           method: post
-          cors: true
+          cors:
+            origin:
+              - https://music-dashboard-jade.vercel.app
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+              - UserID
+            allowCredentials: false
 
 package:
   patterns:
