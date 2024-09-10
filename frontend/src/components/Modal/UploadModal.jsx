@@ -149,6 +149,11 @@ const UploadModal = ({ closeModal }) => {
           {
             fileName: droppedImageFile.name || "",
             fileType: droppedImageFile.type || "",
+          },
+          {
+            headers: {
+              "Content-Type": droppedImageFile.type,
+            },
           }
         );
 
