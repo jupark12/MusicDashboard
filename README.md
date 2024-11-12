@@ -25,6 +25,6 @@ On the backend, I deployed my Golang server using AWS Lambda and API Gateway, le
 
 ### Test account
 
-- Site: https://music-dashboard-jade.vercel.app/
+- Site: [https://music-dashboard-jade.vercel.app/](https://music-dashboard-flax.vercel.app/)
 - test@test.com
 - password
